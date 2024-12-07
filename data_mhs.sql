@@ -1,3 +1,6 @@
+CREATE DATABASE db_kuisioner;
+USE db_kuisioner;
+
 CREATE TABLE mahasiswa (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nim VARCHAR(20) NOT NULL UNIQUE,
