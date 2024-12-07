@@ -3,7 +3,7 @@ USE db_kuisioner;
 
 CREATE TABLE mahasiswa (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    nim VARCHAR(20) NOT NULL UNIQUE,
+    nim VARCHAR(10) NOT NULL UNIQUE,
     nama VARCHAR(100) NOT NULL,
     email VARCHAR(100) NOT NULL UNIQUE,
     no_telp VARCHAR(15),
