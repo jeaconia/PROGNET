@@ -13,7 +13,6 @@ body {
     flex-direction: column; /* Atur arah konten ke kolom */
 }
 
-
 h1, h2 {
     color: #5c4033; /* Warna cokelat gelap untuk heading */
     margin: 20px 0;
@@ -113,20 +112,22 @@ p {
 
 .navbar-container {
     display: flex;
-    justify-content: space-between;
     align-items: center;
     max-width: 3000px;
-    margin: 0 auto;
-    padding: 0 20px;
 }
 
 .navbar-logo {
-    font-size: 1.8em;
-    color: white;
-    text-decoration: none;
-    font-weight: bold;
-    text-align: end;
-    padding-right: 2rem;
+    position: absolute; /* Posisikan logo secara manual */
+    top: 60%; /* Tengah secara vertikal */
+    transform: translateY(-50%); /* Koreksi untuk pusat vertikal */
+    left: 1350px; /* Jarak dari sisi kiri */
+}
+
+.navbar-button {
+    position: absolute; /* Posisikan tombol Home */
+    top: 50%;
+    transform: translateY(-50%);
+    right: 20px; /* Jarak dari sisi kanan */
 }
 
 .navbar-links {
@@ -144,6 +145,12 @@ p {
     color: white;
     font-weight: bold;
     transition: color 0.3s;
+}
+
+.navbar-logo img {
+    width: 60px; /* Atur lebar logo */
+    height: auto; /* Otomatis menyesuaikan tinggi agar sesuai rasio */
+    margin-bottom: 10px; /* Spasi antara logo dan heading */
 }
 
 .container {
@@ -183,4 +190,34 @@ p {
 
 .question-box select {
     background-color: #f9f5f0; 
+}
+
+/* Footer Style */
+footer {
+    position: fixed; /* Tetap di bawah layar */
+    bottom: 0;
+    left: 0;
+    width: 100%; /* Memenuhi lebar layar */
+    background-color: #5c4033; /* Warna latar belakang sesuai tema */
+    color: #fff; /* Warna teks */
+    text-align: center; /* Pusatkan teks */
+    padding: 20px 0; /* Jarak atas dan bawah teks */
+    font-size: 14px; /* Ukuran font */
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1); /* Bayangan untuk efek */
+    z-index: 1000; /* Pastikan di atas elemen lain */
+}
+
+/* Untuk tagline */
+footer h2 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: normal;
+    color: #fff;
+}
+
+/* Untuk copyright */
+footer p {
+    margin: 5px 0 0; /* Margin atas kecil */
+    font-size: 12px;
+    color: #fff;
 }
