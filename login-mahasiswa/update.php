@@ -53,6 +53,7 @@ $stmt->close();
 <html>
 <head>
     <title>Update Profil Mahasiswa</title>
+    <link rel="stylesheet" href="../styles.css">
 </head>
 <body>
     <h2>Edit Profil Mahasiswa</h2>

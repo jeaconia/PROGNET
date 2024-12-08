@@ -29,6 +29,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <html>
 <head>
     <title>Register Dosen</title>
+    <link rel="stylesheet" href="../styles.css">
 </head>
 <body>
     <h2>Register Dosen</h2>

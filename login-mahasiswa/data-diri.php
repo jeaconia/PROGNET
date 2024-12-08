@@ -24,6 +24,7 @@ $stmt->close();
 <html>
 <head>
     <title>View Profil Mahasiswa</title>
+    <link rel="stylesheet" href="../styles.css">
 </head>
 <body>
     <h2>Profil Mahasiswa</h2>

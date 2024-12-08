@@ -34,6 +34,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <html>
 <head>
     <title>Delete Account</title>
+    <link rel="stylesheet" href="../styles.css">
 </head>
 <body>
     <h2>Hapus Akun</h2>
