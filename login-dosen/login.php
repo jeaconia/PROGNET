@@ -17,7 +17,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (password_verify($password, $hashed_password)) {
         $_SESSION['user_id'] = $id;
         $_SESSION['user_name'] = $nama;
-        header("Location: ../login-dosen/home.html");
+        header("Location: ../kuisioner/hasil-kuisioner.php");
     } else {
         echo "NIP atau password salah!";
     }
@@ -32,15 +32,30 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <link rel="stylesheet" href="../styles.css">
 </head>
 <body>
+    <nav class="navbar">
+        <div class="navbar-container">
+            <ul class="navbar-links">
+                <li><a href="../index.html">Home</a></li>
+            </ul>
+        </div>
+        <div class="navbar-logo">
+            <img src="../img/logo-teknologi-informasi-universitas-udayana-ti-unud-jhonarendra.png" alt="Logo" class="logo">
+        </div>
+    </nav>
     <h2>Login Dosen</h2>
-    <p>Kembali Ke <a href="../index.html">Index</a></p>
     <form method="POST" action="">
-        <label>NIP:</label><br>
+        <label>NIP:</label>
         <input type="text" name="nip" required><br>
-        <label>Password:</label><br>
+        <label>Password:</label>
         <input type="password" name="password" required><br>
         <button type="submit">Login</button>
         <p>Belum Punya akun? <a href="register.php">Daftar sekarang</a></p>
     </form>
+    <footer id="footer">
+        <div class="footer">
+            <h2>Be the Next Generation</h2>
+            <p>Copyright © 2024 Dewita Cahyani. All rights reserved.</p>
+        </div>
+    </footer>
 </body>
 </html>
