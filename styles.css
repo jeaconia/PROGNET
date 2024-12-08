@@ -69,20 +69,21 @@ img {
 form label {
     display: block;
     text-align: left;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
     font-weight: bold;
 }
 
 form input {
     width: 100%;
-    padding: 8px;
+    padding: 10px;
     margin-bottom: 12px;
+    margin-right: 200px;
     border: 1px solid #d4a657;
     border-radius: 4px;
 }
 
 form button {
-    width: 100%;
+    width: 105%;
     padding: 10px;
     background-color: #5c4033;
     color: #fff;
@@ -114,6 +115,7 @@ p {
     display: flex;
     align-items: center;
     max-width: 3000px;
+    padding-top: 0.1%;
 }
 
 .navbar-logo {
@@ -157,6 +159,21 @@ p {
     padding-top: 95rem;
     padding-bottom: 10rem;
 }
+
+.container-profil {
+    margin: 20px auto; /* Margin untuk pusatkan */
+    padding: 20px; /* Padding untuk memberikan jarak internal */
+    padding-top: 20rem;
+    padding-bottom: 10rem;
+}
+
+.message {
+    margin-top: 20px; /* Jarak atas untuk pesan */
+    padding: 10px; /* Jarak dalam untuk pesan */
+    text-align: center; /* Pusatkan teks */
+    border-radius: 4px; /* Membuat sudut tumpul */
+}
+
 
 .question-box {
     background-color: #fff; /* Warna latar belakang kotak */
@@ -221,3 +238,74 @@ footer p {
     font-size: 12px;
     color: #fff;
 }
+
+/* Gaya tabel */
+.styled-table {
+    width: 100%;
+    max-width: 1200px;
+    margin: 20px auto; /* Pusatkan tabel */
+    border-collapse: collapse; /* Hilangkan jarak antar border */
+    font-size: 16px; /* Ukuran font */
+    text-align: center; /* Teks rata kiri */
+    border: 1px solid #ddd; /* Border tabel */
+    background-color: #fff; /* Latar belakang tabel */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Bayangan lembut */
+}
+
+/* Gaya header tabel */
+.styled-table thead tr {
+    background-color: #5c4033; /* Warna cokelat gelap */
+    color: #fff; /* Warna teks putih */
+    text-align: center; /* Teks rata tengah */
+    font-weight: bold; /* Teks tebal */
+}
+
+/* Gaya baris tabel */
+.styled-table tbody tr {
+    border-bottom: 1px solid #ddd;
+}
+
+.styled-table tbody tr:nth-child(even) {
+    background-color: #f9f5f0; /* Warna latar baris genap */
+}
+
+.styled-table tbody tr:hover {
+    background-color: #f1e8dd; /* Warna hover */
+}
+
+/* Gaya kolom */
+.styled-table td, .styled-table th {
+    padding: 12px 15px; /* Jarak antar teks */
+}
+
+/* Gaya tombol aksi */
+.action-btn {
+    padding: 8px 12px; /* Jarak di dalam tombol */
+    border: none; /* Hilangkan border */
+    border-radius: 5px; /* Sudut melengkung */
+    font-size: 14px;
+    font-weight: bold; /* Teks tebal */
+    cursor: pointer; /* Ubah kursor menjadi pointer */
+    transition: all 0.3s; /* Efek transisi */
+}
+
+/* Gaya tombol Update */
+.update-btn {
+    background-color: #d4a657; /* Warna emas */
+    color: #fff; /* Warna teks putih */
+}
+
+.update-btn:hover {
+    background-color: #b58840; /* Warna emas gelap */
+}
+
+/* Gaya tombol Delete */
+.delete-btn {
+    background-color:#d4a657; /* Warna merah */
+    color: #fff; /* Warna teks putih */
+}
+
+.delete-btn:hover {
+    background-color: #b58840; /* Warna merah gelap */
+}
+
