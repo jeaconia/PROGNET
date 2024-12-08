@@ -37,7 +37,7 @@ if ($stmt->execute()) {
 } else {
     echo "<script>
         alert('Terjadi error: " . addslashes($stmt->error) . "');
-        window.location.href = 'login-mahasiswa/home.html';
+        window.location.href = '../home.html';
     </script>";
 }
 
