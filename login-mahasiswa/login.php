@@ -17,7 +17,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (password_verify($password, $hashed_password)) {
         $_SESSION['user_id'] = $id;
         $_SESSION['user_name'] = $nama;
-        header("Location: ../kuisioner/hasil-kuisioner.php");
+        header("Location: ../login-mahasiswa/home.html");
     } else {
         echo "NIM atau password salah!";
     }

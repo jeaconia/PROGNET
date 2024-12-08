@@ -4,7 +4,7 @@ include '../config.php';
 
 // Periksa apakah pengguna sudah login
 if (!isset($_SESSION['user_id'])) {
-    header("Location: ../login-mahasiswa/login.php");
+    header("Location: ../login-dosen/login.php");
     exit;
 }
 
@@ -20,7 +20,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Hapus sesi dan redirect ke halaman login setelah akun dihapus
         session_unset();
         session_destroy();
-        echo "Akun berhasil dihapus. <a href='../login-mahasiswa/login.php'>Kembali ke Login</a>";
+        echo "Akun berhasil dihapus. <a href='../login-dosen/login.php'>Kembali ke Login</a>";
     } else {
         echo "Gagal menghapus akun: " . $stmt->error;
     }
