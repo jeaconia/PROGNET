@@ -1,0 +1,186 @@
+/* style.css */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f9f5f0; /* Warna latar belakang netral */
+    color: #5c4033; /* Warna teks cokelat */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Tinggi halaman penuh */
+    text-align: center;
+    flex-direction: column; /* Atur arah konten ke kolom */
+}
+
+
+h1, h2 {
+    color: #5c4033; /* Warna cokelat gelap untuk heading */
+    margin: 20px 0;
+}
+
+h1 {
+    font-size: 2.5em;
+}
+
+p {
+    font-size: 1.2em;
+    color: #5c4033;
+    margin-bottom: 20px;
+}
+
+a {
+    display: inline-block;
+    margin: 10px 0;
+    padding: 5px 10px;
+    text-decoration: none;
+    color: #fff;
+    background-color: #d4a657;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+a:hover {
+    background-color: #b58840; /* Warna emas lebih gelap */
+}
+
+a:active {
+    background-color: #a37938; /* Warna emas saat ditekan */
+}
+
+a.inline-link {
+    color: #d4a657;
+    text-decoration: none;
+    font-weight: bold;
+    margin-top: 10px;
+    display: inline-block;
+}
+
+a.inline-link:hover {
+    text-decoration: underline;
+}
+
+img {
+    width: 150px; /* Ukuran logo */
+    height: auto; /* Pertahankan rasio */
+    margin-bottom: 20px; /* Spasi antara logo dan heading */
+}
+
+form label {
+    display: block;
+    text-align: left;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+form input {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 12px;
+    border: 1px solid #d4a657;
+    border-radius: 4px;
+}
+
+form button {
+    width: 100%;
+    padding: 10px;
+    background-color: #5c4033;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+form button:hover {
+    background-color: #b58840;
+}
+
+p {
+    margin: 10px 0;
+}
+
+.navbar {
+    background-color: #5c4033; /* Warna navbar */
+    padding: 10px 0;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 100;
+}
+
+.navbar-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 3000px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.navbar-logo {
+    font-size: 1.8em;
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    text-align: end;
+    padding-right: 2rem;
+}
+
+.navbar-links {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+}
+
+.navbar-links li {
+    display: inline;
+}
+
+.navbar-links a {
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+    transition: color 0.3s;
+}
+
+.container {
+    padding-top: 85rem;
+    padding-bottom: 10rem;
+}
+
+.question-box {
+    background-color: #fff; /* Warna latar belakang kotak */
+    border: 1px solid #d4a657; /* Border kotak */
+    border-radius: 8px; /* Sudut kotak melengkung */
+    padding: 15px; /* Padding di dalam kotak */
+    margin-bottom: 20px; /* Jarak antar pertanyaan */
+    text-align: left; /* Teks rata kiri */
+}
+
+.question-box label {
+    font-size: 1.1em;
+    font-weight: normal;
+    color: #5c4033;
+    margin-bottom: 10px;
+    display: block;
+}
+
+.question-box select, .question-box textarea {
+    width: 98%;
+    padding: 8px;
+    margin-top: 10px;
+    border: 1px solid #d4a657;
+    border-radius: 4px;
+    font-size: 1em;
+}
+
+.question-box textarea {
+    resize: vertical;
+}
+
+.question-box select {
+    background-color: #f9f5f0; 
+}
