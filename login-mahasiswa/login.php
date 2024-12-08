@@ -32,7 +32,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </head>
 <body>
     <h2>Login Mahasiswa</h2>
-    <p>Kembali Ke <a href="index.html">Index</a></p>
+    <p>Kembali Ke <a href="../index.html">Index</a></p>
     <form method="POST" action="">
         <label>NIM:</label><br>
         <input type="text" name="nim" required><br>

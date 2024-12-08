@@ -32,7 +32,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </head>
 <body>
     <h2>Register Dosen</h2>
-    <p>Kembali Ke <a href="index.html">Index</a></p>
+    <p>Kembali Ke <a href="../index.html">Index</a></p>
     <form method="POST" action="">
         <label>NIP:</label><br>
         <input type="text" name="nip" required><br>
