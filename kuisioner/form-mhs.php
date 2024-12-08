@@ -1,3 +1,28 @@
+<?php
+session_start();
+include '../config.php';
+
+// Periksa apakah pengguna sudah login
+if (!isset($_SESSION['user_id'])) {
+    header("Location: ../login-mahasiswa/login.php");
+    exit;
+}
+
+$user_id = $_SESSION['user_id'];
+
+// Ambil data mahasiswa dari database
+$sql_mahasiswa = "SELECT nim, nama FROM mahasiswa WHERE id = ?";
+$stmt = $conn->prepare($sql_mahasiswa);
+$stmt->bind_param("i", $user_id);
+$stmt->execute();
+$stmt->bind_result($nim, $nama);
+$stmt->fetch();
+$stmt->close();
+
+// Ambil data dosen dari database untuk dropdown
+$sql_dosen = "SELECT nip, nama FROM dosen";
+$result_dosen = $conn->query($sql_dosen);
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,8 +34,32 @@
 <body>
     <div class="container">
         <h1>Form Penilaian Kinerja Dosen</h1>
-        <form id="formPenilaian">
+        <form id="formPenilaian" action="simpan-kuisioner.php" method="POST">
+            <!-- Data Mahasiswa -->
+            <h2>Data Mahasiswa</h2>
+            <p><strong>NIM:</strong> <?php echo htmlspecialchars($nim); ?></p>
+            <p><strong>Nama:</strong> <?php echo htmlspecialchars($nama); ?></p>
+            <input type="hidden" name="nim_mahasiswa" value="<?php echo htmlspecialchars($nim); ?>">
+
+            <!-- Dropdown untuk Memilih Dosen -->
+            <h2>Pilih Dosen</h2>
+            <label for="nip_dosen">Pilih dosen yang ingin dinilai:</label>
+            <select name="nip_dosen" id="nip_dosen" required>
+                <option value="">-- Pilih Dosen --</option>
+                <?php
+                if ($result_dosen->num_rows > 0) {
+                    while ($row = $result_dosen->fetch_assoc()) {
+                        echo "<option value='" . htmlspecialchars($row['nip']) . "'>" . htmlspecialchars($row['nama']) . "</option>";
+                    }
+                } else {
+                    echo "<option value=''>Tidak ada dosen tersedia</option>";
+                }
+                ?>
+            </select>
+
+            <!-- Form Pertanyaan -->
             <h2>Kompetensi Pengajaran</h2>
+            <!-- Pertanyaan lainnya -->
             <label>1. Apakah dosen menyampaikan materi dengan jelas dan mudah dipahami?</label>
             <select name="materiJelas" required>
                 <option value="Ya">Ya</option>
@@ -87,12 +136,9 @@
         <a href="../index.html" class="back-link">Kembali ke Index</a>
     </div>
 
-    <script>
-        document.getElementById("formPenilaian").onsubmit = (e) => {
-            e.preventDefault();
-            alert("Terima kasih atas partisipasi Anda!");
-            window.location.href = "../index.html";
-        };
-    </script>
 </body>
 </html>
+<?php
+// Tutup koneksi database
+$conn->close();
+?>
