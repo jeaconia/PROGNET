@@ -1,6 +1,8 @@
 <?php
 include '../config.php';
 
+$message = ""; // Variabel untuk menyimpan pesan
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nip = $_POST['nip'];
     $nama = $_POST['nama'];
@@ -17,13 +19,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->bind_param("sssssss", $nip, $nama, $email, $no_telp, $jurusan, $alamat, $password);
 
     if ($stmt->execute()) {
-        echo "Pendaftaran berhasil! <a href='login.php'>Login sekarang</a>";
+        $message = "Pendaftaran berhasil! <br> <a href='login.php'>Login sekarang</a>";
     } else {
-        echo "Error: " . $stmt->error;
+        $message = "Error: " . $stmt->error;
     }
     $stmt->close();
 }
 ?>
+
 
 <!DOCTYPE html>
 <html>
@@ -42,23 +45,34 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <img src="../img/logo-teknologi-informasi-universitas-udayana-ti-unud-jhonarendra.png" alt="Logo" class="logo">
         </div>
     </nav>
-    <h2>Register Dosen</h2>
-    <form method="POST" action="">
-        <label>NIP:</label>
-        <input type="text" name="nip" required><br>
-        <label>Nama:</label>
-        <input type="text" name="nama" required><br>
-        <label>Email:</label>
-        <input type="email" name="email" required><br>
-        <label>Password:</label>
-        <input type="password" name="password" required><br>
-        <button type="submit">Daftar</button>
-        <p>Sudah Punya akun? <a href="login.php">Masuk</a></p>
-    </form>
+    <div class="container-profil">
+        <h2>Register Dosen</h2>
+        <?php if (!empty($message)): ?>
+            <div class="message"><?php echo $message; ?></div>
+        <?php endif; ?>
+        <form method="POST" action="">
+            <label>NIP:</label>
+            <input type="text" name="nip" required><br>
+            <label>Nama:</label>
+            <input type="text" name="nama" required><br>
+            <label>Email:</label>
+            <input type="email" name="email" required><br>
+            <label>No Telepon:</label>
+            <input type="text" name="no_telp" required><br>
+            <label>Jurusan:</label>
+            <input type="text" name="jurusan" required><br>
+            <label>Alamat:</label>
+            <input type="text" name="alamat" required><br>
+            <label>Password:</label>
+            <input type="password" name="password" required><br>
+            <button type="submit">Daftar</button>
+            <p>Sudah Punya akun? <a href="login.php">Masuk</a></p>
+        </form>
+    </div>
     <footer id="footer">
         <div class="footer">
             <h2>Be the Next Generation</h2>
-            <p>Copyright © 2024 Dewita Cahyani. All rights reserved.</p>
+            <p>Copyright © 2024 AGS. All rights reserved.</p>
         </div>
     </footer>
 </body>

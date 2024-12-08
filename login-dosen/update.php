@@ -9,6 +9,7 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 $user_id = $_SESSION['user_id'];
+$message = ""; // Variabel untuk pesan sukses atau error
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Ambil data dari form edit profil
@@ -32,9 +33,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     if ($stmt->execute()) {
-        echo "Profil berhasil diperbarui! <a href='view-profil.php'>Lihat Profil</a>";
+        $message = "Profil berhasil diperbarui! <br> <a href='data-diri.php'>Lihat Profil</a>";
     } else {
-        echo "Error: " . $stmt->error;
+        $message = "Error: " . $stmt->error;
     }
     $stmt->close();
 }
@@ -44,42 +45,70 @@ $sql = "SELECT nip, nama, email, no_telp, jurusan, alamat FROM dosen WHERE id = 
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
-$stmt->bind_result($npm, $nama, $email, $no_telp, $jurusan, $alamat);
+$stmt->bind_result($nip, $nama, $email, $no_telp, $jurusan, $alamat);
 $stmt->fetch();
 $stmt->close();
 ?>
 
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Update Profil Mahasiswa</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Profil Dosen</title>
     <link rel="stylesheet" href="../styles.css">
 </head>
 <body>
-    <h2>Edit Profil Mahasiswa</h2>
-    <form method="POST" action="">
-        <label>NIM:</label><br>
-        <input type="text" value="<?php echo $nim; ?>" disabled><br>
+    <nav class="navbar">
+        <div class="navbar-container">
+            <ul class="navbar-links">
+                <li><a href="../index.html">Home</a></li>
+                <li><a href="logout.php">Logout</a></li>
+            </ul>
+        </div>
+        <div class="navbar-logo">
+            <img src="../img/logo-teknologi-informasi-universitas-udayana-ti-unud-jhonarendra.png" alt="Logo" class="logo">
+        </div>
+    </nav>
 
-        <label>Nama:</label><br>
-        <input type="text" name="nama" value="<?php echo $nama; ?>" required><br>
+    <div class="container-profil">
+        <h2>Edit Profil Dosen</h2>
+        <?php if (!empty($message)): ?>
+            <div class="message"><?php echo $message; ?></div>
+        <?php endif; ?>
+        <form method="POST" action="">
+            <label>NIP:</label>
+            <input type="text" value="<?php echo $nip; ?>" disabled><br>
 
-        <label>Email:</label><br>
-        <input type="email" name="email" value="<?php echo $email; ?>" required><br>
+            <label>Nama:</label>
+            <input type="text" name="nama" value="<?php echo $nama; ?>" required><br>
 
-        <label>No Telepon:</label><br>
-        <input type="text" name="no_telp" value="<?php echo $no_telp; ?>"><br>
+            <label>Email:</label>
+            <input type="email" name="email" value="<?php echo $email; ?>" required><br>
 
-        <label>Jurusan:</label><br>
-        <input type="text" name="jurusan" value="<?php echo $jurusan; ?>"><br>
+            <label>No Telepon:</label>
+            <input type="text" name="no_telp" value="<?php echo $no_telp; ?>" required><br>
 
-        <label>Alamat:</label><br>
-        <textarea name="alamat"><?php echo $alamat; ?></textarea><br>
+            <label>Jurusan:</label>
+            <input type="text" name="jurusan" value="<?php echo $jurusan; ?>" required><br>
 
-        <label>Password Baru (opsional):</label><br>
-        <input type="password" name="password"><br>
+            <label>Alamat:</label>
+            <input type="text" name="alamat" value="<?php echo $alamat; ?>" required><br>
 
-        <button type="submit">Simpan Perubahan</button>
-    </form>
+            <label>Password Baru (opsional):</label>
+            <input type="password" name="password"><br>
+
+            <button type="submit">Simpan Perubahan</button>
+        </form>
+    </div>
+
+    <footer id="footer">
+        <div class="footer">
+            <h2>Be the Next Generation</h2>
+            <p>Copyright © 2024 AGS. All rights reserved.</p>
+        </div>
+    </footer>
 </body>
 </html>
+
