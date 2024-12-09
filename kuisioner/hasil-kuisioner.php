@@ -14,109 +14,108 @@
         <h2>Data Terkumpul</h2>
         <div id="hasilContainer"></div>
 
-        <h2>Grafik Hasil</h2>
-        <canvas id="kuisionerChart" width="400" height="200"></canvas>
+        <h2>Grafik Per Pertanyaan</h2>
+        <div id="grafikContainer">
+            <canvas id="materiJelasChart" width="400" height="200"></canvas>
+            <canvas id="metodeEfektifChart" width="400" height="200"></canvas>
+            <canvas id="jawabanPertanyaanChart" width="400" height="200"></canvas>
+        </div>
+
 
         <a href="../index.html" class="back-link">Kembali ke Halaman Utama</a>
     </div>
 
     <script>
-        // Ambil data dari localStorage
-        const hasilKuisioner = JSON.parse(localStorage.getItem("hasilKuisioner")) || [];
+document.addEventListener("DOMContentLoaded", () => {
+    fetch("getkuisioner.php")
+        .then(response => response.json())
+        .then(data => {
+            // Tampilkan data dalam tabel
+            const container = document.getElementById("hasilContainer");
+            if (data.length === 0) {
+                container.innerHTML = "<p>Belum ada data kuisioner yang masuk.</p>";
+            } else {
+                let tableHTML = `<table border="1" cellspacing="0" cellpadding="5">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Materi Jelas</th>
+                            <th>Metode Efektif</th>
+                            <th>Jawaban Pertanyaan</th>
+                            <th>Contoh Nyata</th>
+                            <th>Kehadiran</th>
+                            <th>Ketepatan Waktu</th>
+                            <th>Diskusi Terbuka</th>
+                            <th>Kenyamanan Diskusi</th>
+                            <th>Sikap Profesional</th>
+                            <th>Saran</th>
+                        </tr>
+                    </thead>
+                    <tbody>`;
 
-        // Tampilkan data dalam bentuk tabel
-        const container = document.getElementById("hasilContainer");
-        if (hasilKuisioner.length === 0) {
-            container.innerHTML = "<p>Belum ada data kuisioner yang masuk.</p>";
-        } else {
-            let tableHTML = `<table border="1" cellspacing="0" cellpadding="5">
-                <thead>
-                    <tr>
-                        <th>No</th>
-                        <th>Materi Jelas</th>
-                        <th>Metode Efektif</th>
-                        <th>Jawaban Pertanyaan</th>
-                        <th>Contoh Nyata</th>
-                        <th>Kehadiran</th>
-                        <th>Ketepatan Waktu</th>
-                        <th>Diskusi Terbuka</th>
-                        <th>Kenyamanan Diskusi</th>
-                        <th>Sikap Profesional</th>
-                        <th>Saran</th>
-                    </tr>
-                </thead>
-                <tbody>`;
+                data.forEach((item, index) => {
+                    tableHTML += `
+                        <tr>
+                            <td>${index + 1}</td>
+                            <td>${item.materi_jelas}</td>
+                            <td>${item.metode_efektif}</td>
+                            <td>${item.jawaban_pertanyaan}</td>
+                            <td>${item.contoh_nyata}</td>
+                            <td>${item.kehadiran_jadwal}</td>
+                            <td>${item.tepat_waktu}</td>
+                            <td>${item.diskusi_terbuka}</td>
+                            <td>${item.kenyamanan_diskusi}</td>
+                            <td>${item.sikap_profesional}</td>
+                            <td>${item.saran}</td>
+                        </tr>`;
+                });
 
-            hasilKuisioner.forEach((data, index) => {
-                tableHTML += `
-                    <tr>
-                        <td>${index + 1}</td>
-                        <td>${data.materiJelas}</td>
-                        <td>${data.metodeEfektif}</td>
-                        <td>${data.jawabanPertanyaan}</td>
-                        <td>${data.contohNyata}</td>
-                        <td>${data.kehadiranJadwal}</td>
-                        <td>${data.tepatWaktu}</td>
-                        <td>${data.diskusiTerbuka}</td>
-                        <td>${data.kenyamananDiskusi}</td>
-                        <td>${data.sikapProfesional}</td>
-                        <td>${data.saran}</td>
-                    </tr>`;
+                tableHTML += `</tbody></table>`;
+                container.innerHTML = tableHTML;
+            }
+
+            // Hitung statistik untuk grafik per kategori
+            const statistik = {
+                materiJelas: { Ya: 0, Kadang: 0, Tidak: 0 },
+                metodeEfektif: { Ya: 0, Kadang: 0, Tidak: 0 },
+                jawabanPertanyaan: { Buruk: 0, Cukup: 0, Baik: 0, "Sangat Baik": 0 }
+            };
+
+            data.forEach((item) => {
+                statistik.materiJelas[item.materi_jelas]++;
+                statistik.metodeEfektif[item.metode_efektif]++;
+                statistik.jawabanPertanyaan[item.jawaban_pertanyaan]++;
             });
 
-            tableHTML += `</tbody></table>`;
-            container.innerHTML = tableHTML;
-        }
-
-        // Hitung statistik untuk grafik
-        const statistik = {
-            materiJelas: { Ya: 0, Kadang: 0, Tidak: 0 },
-            metodeEfektif: { Ya: 0, Kadang: 0, Tidak: 0 },
-            jawabanPertanyaan: { Buruk: 0, Cukup: 0, Baik: 0, "Sangat Baik": 0 }
-        };
-
-        hasilKuisioner.forEach((data) => {
-            statistik.materiJelas[data.materiJelas]++;
-            statistik.metodeEfektif[data.metodeEfektif]++;
-            statistik.jawabanPertanyaan[data.jawabanPertanyaan]++;
-        });
-
-        // Konfigurasi grafik dengan Chart.js
-        const ctx = document.getElementById("kuisionerChart").getContext("2d");
-        const chart = new Chart(ctx, {
-            type: "bar",
-            data: {
-                labels: ["Ya", "Kadang", "Tidak"],
-                datasets: [
-                    {
-                        label: "Materi Jelas",
-                        data: Object.values(statistik.materiJelas),
-                        backgroundColor: "#4CAF50"
+            // Fungsi untuk membuat grafik
+            const createChart = (ctxId, label, data, colors) => {
+                const ctx = document.getElementById(ctxId).getContext("2d");
+                new Chart(ctx, {
+                    type: "bar",
+                    data: {
+                        labels: Object.keys(data),
+                        datasets: [{
+                            label: label,
+                            data: Object.values(data),
+                            backgroundColor: colors
+                        }]
                     },
-                    {
-                        label: "Metode Efektif",
-                        data: Object.values(statistik.metodeEfektif),
-                        backgroundColor: "#FFC107"
-                    },
-                    {
-                        label: "Jawaban Pertanyaan",
-                        data: [
-                            statistik.jawabanPertanyaan.Buruk || 0,
-                            statistik.jawabanPertanyaan.Cukup || 0,
-                            statistik.jawabanPertanyaan.Baik || 0,
-                            statistik.jawabanPertanyaan["Sangat Baik"] || 0
-                        ],
-                        backgroundColor: "#2196F3"
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: { display: true }
+                        }
                     }
-                ]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: { display: true }
-                }
-            }
-        });
+                });
+            };
+
+            // Buat grafik untuk setiap pertanyaan
+            createChart("materiJelasChart", "Materi Jelas", statistik.materiJelas, ["#4CAF50", "#FFC107", "#F44336"]);
+            createChart("metodeEfektifChart", "Metode Efektif", statistik.metodeEfektif, ["#2196F3", "#FFC107", "#F44336"]);
+            createChart("jawabanPertanyaanChart", "Jawaban Pertanyaan", statistik.jawabanPertanyaan, ["#4CAF50", "#FFC107", "#F44336", "#2196F3"]);
+        })
+        .catch(error => console.error("Error fetching data:", error));
+});
     </script>
 </body>
 </html>
