@@ -156,8 +156,11 @@ p {
 }
 
 .container {
-    padding-top: 95rem;
-    padding-bottom: 10rem;
+    height: 100vh; /* Mengambil seluruh tinggi layar */
+    padding-top: 5vh; /* Padding atas responsif */
+    padding-bottom: 5vh; /* Padding bawah responsif */
+    box-sizing: border-box; /* Pastikan padding dan border dihitung dalam total ukuran */
+
 }
 
 .container-profil {
