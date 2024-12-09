@@ -19,6 +19,12 @@
             <canvas id="materiJelasChart" width="400" height="200"></canvas>
             <canvas id="metodeEfektifChart" width="400" height="200"></canvas>
             <canvas id="jawabanPertanyaanChart" width="400" height="200"></canvas>
+            <canvas id="contohNyata" width="400" height="200"></canvas>
+            <canvas id="kehadiran" width="400" height="200"></canvas>
+            <canvas id="ketepatanWaktu" width="400" height="200"></canvas>
+            <canvas id="diskusiTerbuka" width="400" height="200"></canvas>
+            <canvas id="kenyamananDiskusi" width="400" height="200"></canvas>
+            <canvas id="sikapProfesional" width="400" height="200"></canvas>
         </div>
 
 
@@ -78,13 +84,26 @@ document.addEventListener("DOMContentLoaded", () => {
             const statistik = {
                 materiJelas: { Ya: 0, Kadang: 0, Tidak: 0 },
                 metodeEfektif: { Ya: 0, Kadang: 0, Tidak: 0 },
-                jawabanPertanyaan: { Buruk: 0, Cukup: 0, Baik: 0, "Sangat Baik": 0 }
+                jawabanPertanyaan: { Buruk: 0, Cukup: 0, Baik: 0, "Sangat Baik": 0 },
+                contohNyata: { Ya: 0, Kadang: 0, Tidak: 0 },
+                kehadiran: { Ya: 0, Kadang: 0, Tidak: 0 },
+                ketepatanWaktu: { Sering: 0, Jarang: 0, "Tidak Sering": 0 },
+                diskusiTerbuka: { Ya: 0, Kadang: 0, Tidak: 0 },
+                kenyamananDiskusi: { "Sangat Nyaman": 0, Nyaman: 0, Cukup: 0, "Tidak Nyaman": 0 },
+                sikapProfesional: { Ya: 0, Kadang: 0, Tidak: 0 }
             };
 
             data.forEach((item) => {
                 statistik.materiJelas[item.materi_jelas]++;
                 statistik.metodeEfektif[item.metode_efektif]++;
                 statistik.jawabanPertanyaan[item.jawaban_pertanyaan]++;
+                statistik.contohNyata[item.contoh_nyata]++;
+                statistik.kehadiran[item.kehadiran_jadwal]++;
+                statistik.ketepatanWaktu[item.tepat_waktu]++;
+                statistik.diskusiTerbuka[item.diskusi_terbuka]++;
+                statistik.kenyamananDiskusi[item.kenyamanan_diskusi]++;
+                statistik.sikapProfesional[item.sikap_profesional]++;
+                
             });
 
             // Fungsi untuk membuat grafik
@@ -113,6 +132,12 @@ document.addEventListener("DOMContentLoaded", () => {
             createChart("materiJelasChart", "Materi Jelas", statistik.materiJelas, ["#4CAF50", "#FFC107", "#F44336"]);
             createChart("metodeEfektifChart", "Metode Efektif", statistik.metodeEfektif, ["#2196F3", "#FFC107", "#F44336"]);
             createChart("jawabanPertanyaanChart", "Jawaban Pertanyaan", statistik.jawabanPertanyaan, ["#4CAF50", "#FFC107", "#F44336", "#2196F3"]);
+            createChart("contohNyata", "Contoh Nyata", statistik.contohNyata, ["#4CAF50", "#FFC107", "#F44336"]);
+            createChart("kehadiran", "Kehadiran", statistik.kehadiran, ["#4CAF50", "#FFC107", "#F44336"]);
+            createChart("ketepatanWaktu", "Tepat Waktu", statistik.ketepatanWaktu, ["#4CAF50", "#FFC107", "#F44336"]);
+            createChart("diskusiTerbuka", "Diskusi Terbuka", statistik.diskusiTerbuka, ["#4CAF50", "#FFC107", "#F44336"]);
+            createChart("kenyamananDiskusi", "Kenyamanan Diskusi", statistik.kenyamananDiskusi, ["#4CAF50", "#FFC107", "#F44336", "#2196F3"]);
+            createChart("sikapProfesional", "Sikap Profesional", statistik.sikapProfesional, ["#4CAF50", "#FFC107", "#F44336"]);
         })
         .catch(error => console.error("Error fetching data:", error));
 });
