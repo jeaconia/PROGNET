@@ -61,12 +61,8 @@ $stmt->close();
                 <td><?php echo $row['jurusan']; ?></td>
                 <td><?php echo $row['alamat']; ?></td>
                 <td>
-                    <a href="update.php?id=<?php echo $row['id']; ?>">
-                        <button class="action-btn update-btn">Update</button>
-                    </a>
-                    <a href="delete.php?id=<?php echo $row['id']; ?>" onclick="return confirm('Ingin menghapus data ini?')">
-                        <button class="action-btn delete-btn">Delete</button>
-                    </a>
+                <a href="update.php">Edit Profil</a> </br>
+                <a href="delete.php">Delete Profil</a>
                 </td>
             </tr>
             <?php endforeach; ?>
