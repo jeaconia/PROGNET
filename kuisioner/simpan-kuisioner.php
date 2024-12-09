@@ -32,12 +32,12 @@ $stmt->bind_param("ssssssssssss", $nim_mahasiswa, $nip_dosen, $materi_jelas, $me
 if ($stmt->execute()) {
     echo "<script>
         alert('Data berhasil disimpan!');
-        window.location.href = '../home.html';
+        window.location.href = '../login-mahasiswa/home.html';
     </script>";
 } else {
     echo "<script>
         alert('Terjadi error: " . addslashes($stmt->error) . "');
-        window.location.href = '../home.html';
+        window.location.href = '../login-mahasiswa/home.html';
     </script>";
 }
 
