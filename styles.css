@@ -2,7 +2,7 @@
 body {
     font-family: Arial, sans-serif;
     margin: 0;
-    padding: 0;
+    padding-top: 60px;
     background-color: #f9f5f0; /* Warna latar belakang netral */
     color: #5c4033; /* Warna teks cokelat */
     display: flex;
@@ -102,13 +102,53 @@ p {
     margin: 10px 0;
 }
 
+table {
+    width: 100%; /* Lebar penuh */
+    border-collapse: collapse; /* Hilangkan jarak antar border */
+    margin: 20px auto; /* Pusatkan tabel dengan margin */
+    font-size: 14px; /* Ukuran font */
+    background-color: #fff; /* Latar belakang tabel */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Bayangan lembut */
+    text-align: center; /* Teks rata tengah */
+}
+
+table thead tr {
+    background-color: #5c4033; /* Warna cokelat gelap */
+    color: #fff; /* Warna teks putih */
+    font-weight: bold; /* Teks tebal */
+}
+
+table thead th {
+    padding: 30px; /* Jarak di dalam sel */
+    text-align: center; /* Teks rata tengah */
+}
+
+table tbody tr {
+    border-bottom: 1px solid #ddd; /* Border antar baris */
+}
+
+table tbody td {
+    padding: 30px; /* Jarak di dalam sel */
+    font-size: 14px; /* Ukuran font */
+    color: #5c4033; /* Warna teks */
+    word-wrap: break-word; /* Bungkus teks panjang */
+}
+
+table, th, td {
+    border: 1px solid #ddd; /* Border tabel */
+}
+
+table th, table td {
+    border: 1px solid #d4a657; /* Warna emas */
+}
+
 .navbar {
     background-color: #5c4033; /* Warna navbar */
     padding: 10px 0;
     position: fixed;
     top: 0;
     width: 100%;
-    z-index: 100;
+    z-index: 1000;
 }
 
 .navbar-container {
@@ -164,6 +204,11 @@ p {
     margin: 20px auto; /* Margin untuk pusatkan */
     padding: 20px; /* Padding untuk memberikan jarak internal */
     padding-top: 20rem;
+    padding-bottom: 10rem;
+}
+
+.container-kuis {
+    padding-top: 390rem;
     padding-bottom: 10rem;
 }
 
