@@ -6,7 +6,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nim = $_POST['nim'];
     $password = $_POST['password'];
 
-    // Menggunakan tabel 'mahasiswa' untuk login
     $sql = "SELECT id, nama, password FROM mahasiswa WHERE nim = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("s", $nim);
@@ -16,8 +15,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if (password_verify($password, $hashed_password)) {
         $_SESSION['user_id'] = $id;
-        $_SESSION['user_name'] = $nama;
-        header("Location: home.html");
+        $_SESSION['username'] = $nama;
+        header("Location: home.php");
     } else {
         echo "NIM atau password salah!";
     }

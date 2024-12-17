@@ -6,7 +6,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nip = $_POST['nip'];
     $password = $_POST['password'];
 
-    // Menggunakan tabel 'dosen' untuk login
     $sql = "SELECT id, nama, password FROM dosen WHERE nip = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("s", $nip);
@@ -17,7 +16,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (password_verify($password, $hashed_password)) {
         $_SESSION['user_id'] = $id;
         $_SESSION['user_name'] = $nama;
-        header("Location: home.html");
+        header("Location: home.php");
     } else {
         echo "NIP atau password salah!";
     }

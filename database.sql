@@ -21,13 +21,13 @@ CREATE TABLE pilihan (
     FOREIGN KEY (pertanyaan_id) REFERENCES pertanyaan(id)
 );
 
-CREATE TABLE jawaban(
+CREATE TABLE jawaban (
     id INT AUTO_INCREMENT PRIMARY KEY,
     kuisioner_id INT NOT NULL,
     pertanyaan_id INT NOT NULL,
     pilihan_id INT DEFAULT NULL, -- Untuk dropdown, checkbox, dan radio
     jawaban_teks TEXT DEFAULT NULL, -- Untuk textbox
     FOREIGN KEY (kuisioner_id) REFERENCES kuisioner(id),
-    FOREIGN KEY (indikator_id) REFERENCES indikator_kuisioner(id),
-    FOREIGN KEY (pilihan_id) REFERENCES pilihan_jawaban(id)
+    FOREIGN KEY (pertanyaan_id) REFERENCES pertanyaan(id),
+    FOREIGN KEY (pilihan_id) REFERENCES pilihan(id)
 );

@@ -22,9 +22,8 @@
     <footer id="footer">
         <div class="footer">
             <h2>Be the Next Generation</h2>
-            <p>Copyright © 2024 AGS. All rights reserved.</p>
+            <p>&copy; <?php echo date('Y'); ?> AGS. All rights reserved.</p>
         </div>
     </footer>
 </body>
 </html>
-

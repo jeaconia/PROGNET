@@ -1,16 +1,15 @@
 <?php
 session_start();
-include '../config.php';
+include '../config.php'; // Database connection
 
-// Periksa apakah pengguna sudah login
-if (!isset($_SESSION['user_id'])) {
-    header("Location: ../login-mahasiswa/login.php");
-    exit;
+// Check if the user is logged in
+if (!isset($_SESSION['username'])) {
+    header("Location: login.php");
+    exit();
 }
 
+// Get student data from the database
 $user_id = $_SESSION['user_id'];
-
-// Ambil data mahasiswa dari database
 $sql_mahasiswa = "SELECT nim, nama FROM mahasiswa WHERE id = ?";
 $stmt = $conn->prepare($sql_mahasiswa);
 $stmt->bind_param("i", $user_id);
@@ -19,9 +18,13 @@ $stmt->bind_result($nim, $nama);
 $stmt->fetch();
 $stmt->close();
 
-// Ambil data dosen dari database untuk dropdown
+// Get lecturer data for dropdown
 $sql_dosen = "SELECT nip, nama FROM dosen";
 $result_dosen = $conn->query($sql_dosen);
+
+// Get questions for the form
+$sql_pertanyaan = "SELECT id, nama_pertanyaan, tipe_pertanyaan FROM pertanyaan";
+$result_pertanyaan = $conn->query($sql_pertanyaan);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -68,98 +71,43 @@ $result_dosen = $conn->query($sql_dosen);
                 </select>
             </div>
 
-            <!-- Form Pertanyaan -->
-            <h2>Kompetensi Pengajaran</h2>
-            <!-- Pertanyaan lainnya -->
-            <div class="question-box">
-                <label>1. Apakah dosen menyampaikan materi dengan jelas dan mudah dipahami?</label>
-                <select name="materiJelas" required>
-                    <option value="Ya">Ya</option>
-                    <option value="Kadang">Kadang</option>
-                    <option value="Tidak">Tidak</option>
-                </select>
-            </div>
-
-            <div class="question-box">
-                <label>2. Apakah dosen menggunakan metode pengajaran yang efektif?</label>
-                <select name="metodeEfektif" required>
-                    <option value="Ya">Ya</option>
-                    <option value="Kadang">Kadang</option>
-                    <option value="Tidak">Tidak</option>
-                </select>
-            </div>
-
-            <div class="question-box">
-                <label>3. Seberapa baik dosen menjawab pertanyaan dari mahasiswa?</label>
-                <select name="jawabanPertanyaan" required>
-                    <option value="Buruk">Buruk</option>
-                    <option value="Cukup">Cukup</option>
-                    <option value="Baik">Baik</option>
-                    <option value="Sangat Baik">Sangat Baik</option>
-                </select>
-            </div>
-
-            <div class="question-box">
-                <label>4. Apakah dosen memberikan contoh nyata yang relevan dengan materi?</label>
-                <select name="contohNyata" required>
-                    <option value="Ya">Ya</option>
-                    <option value="Kadang">Kadang</option>
-                    <option value="Tidak">Tidak</option>
-                </select>
-            </div>
-
-            <h2>Kehadiran dan Ketepatan Waktu</h2>
-
-            <div class="question-box">
-                <label>5. Apakah dosen selalu hadir sesuai jadwal?</label>
-                <select name="kehadiranJadwal" required>
-                    <option value="Ya">Ya</option>
-                    <option value="Kadang">Kadang</option>
-                    <option value="Tidak">Tidak</option>
-                </select>
-            </div>
-
-            <div class="question-box">
-                <label>6. Seberapa sering dosen memulai atau mengakhiri kelas tepat waktu?</label>
-                <select name="tepatWaktu" required>
-                    <option value="Sering">Sering</option>
-                    <option value="Jarang">Jarang</option>
-                    <option value="Tidak Sering">Tidak Sering</option>
-                </select>
-            </div>
-
-            <h2>Interaksi dengan Mahasiswa</h2>
-
-            <div class="question-box">
-                <label>7. Apakah dosen terbuka untuk diskusi dan menerima masukan?</label>
-                <select name="diskusiTerbuka" required>
-                    <option value="Ya">Ya</option>
-                    <option value="Kadang">Kadang</option>
-                    <option value="Tidak">Tidak</option>
-                </select>
-            </div>
-
-            <div class="question-box">
-                <label>8. Seberapa nyaman Anda berdiskusi atau bertanya kepada dosen?</label>
-                <select name="kenyamananDiskusi" required>
-                    <option value="Sangat Nyaman">Sangat Nyaman</option>
-                    <option value="Nyaman">Nyaman</option>
-                    <option value="Cukup">Cukup</option>
-                    <option value="Tidak Nyaman">Tidak Nyaman</option>
-                </select>
-            </div>
-
-            <div class="question-box">
-                <label>9. Apakah dosen menunjukkan sikap yang ramah dan profesional?</label>
-                <select name="sikapProfesional" required>
-                    <option value="Ya">Ya</option>
-                    <option value="Kadang">Kadang</option>
-                    <option value="Tidak">Tidak</option>
-                </select>
-            </div>
+            <?php
+            if ($result_pertanyaan->num_rows > 0) {
+                while ($row = $result_pertanyaan->fetch_assoc()) {
+                    echo "<div class='question-box'>";
+                    echo "<label>" . htmlspecialchars($row['nama_pertanyaan']) . "</label>";
+                    if ($row['tipe_pertanyaan'] == 'dropdown') {
+                        echo "<select name='jawaban[" . $row['id'] . "]' required>";
+                        echo "<option value=''>-- Pilih --</option>";
+                        // Fetch choices
+                        $sql_choices = "SELECT id, pilihan FROM pilihan WHERE pertanyaan_id = ?";
+                        $stmt_choices = $conn->prepare($sql_choices);
+                        $stmt_choices->bind_param("i", $row['id']);
+                        $stmt_choices->execute();
+                        $result_choices = $stmt_choices->get_result();
+                        while ($choice = $result_choices->fetch_assoc()) {
+                            echo "<option value='" . htmlspecialchars($choice['id']) . "'>" . htmlspecialchars($choice['pilihan']) . "</option>";
+                        }
+                        echo "</select>";
+                    } elseif ($row['tipe_pertanyaan'] == 'textbox') {
+                        echo "<textarea name='jawaban[" . $row['id'] . "]' required></textarea>";
+                    } else {
+                        // For 'radio' or 'checkbox'
+                        $sql_choices = "SELECT id, pilihan FROM pilihan WHERE pertanyaan_id = ?";
+                        $stmt_choices = $conn->prepare($sql_choices);
+                        $stmt_choices->bind_param("i", $row['id']);
+                        $stmt_choices->execute();
+                        $result_choices = $stmt_choices->get_result();
+                        while ($choice = $result_choices->fetch_assoc()) {
+                            echo "<label><input type='" . ($row['tipe_pertanyaan'] == 'radio' ? 'radio' : 'checkbox') . "' name='jawaban[" . $row['id'] . "][]' value='" . htmlspecialchars($choice['id']) . "'> " . htmlspecialchars($choice['pilihan']) . "</label>";
+                        }
+                    }
+                    echo "</div>";
+                }
+            }
+            ?>
 
             <h2>Saran atau Masukan</h2>
-
             <div class="question-box">
                 <label>10. Adakah masukan/saran terkait kinerja dosen untuk tahun ajaran berikutnya?</label>
                 <textarea name="saran" rows="4" placeholder="Masukkan saran Anda di sini..." required></textarea>
@@ -177,6 +125,6 @@ $result_dosen = $conn->query($sql_dosen);
 </body>
 </html>
 <?php
-// Tutup koneksi database
+// Close database connection
 $conn->close();
 ?>

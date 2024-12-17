@@ -1,3 +1,14 @@
+<?php
+session_start();
+include '../config.php'; // Koneksi database
+
+// Cek apakah pengguna sudah login
+if (!isset($_SESSION['username'])) {
+    header("Location: login.php");
+    exit();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
