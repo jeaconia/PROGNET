@@ -49,7 +49,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <label>Password:</label>
         <input type="password" name="password" required><br>
         <button type="submit">Login</button>
-        <p>Belum Punya akun? <a href="register.php">Daftar sekarang</a></p>
     </form>
     <footer id="footer">
         <div class="footer">
