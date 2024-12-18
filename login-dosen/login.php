@@ -15,8 +15,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if (password_verify($password, $hashed_password)) {
         $_SESSION['user_id'] = $id;
-        $_SESSION['user_name'] = $nama;
+        $_SESSION['username'] = $nama;
         header("Location: home.php");
+        exit;
     } else {
         echo "NIP atau password salah!";
     }
