@@ -62,7 +62,6 @@ $stmt->close();
                 <td><?php echo $row['alamat']; ?></td>
                 <td>
                 <a href="update.php">Edit Profil</a> </br>
-                <a href="delete.php">Delete Profil</a>
                 </td>
             </tr>
             <?php endforeach; ?>
