@@ -46,6 +46,9 @@ $radioAndDropdownData = array_filter($data, function ($row) {
 $checkboxData = array_filter($data, function ($row) {
     return $row['tipe_pertanyaan'] === 'checkbox';
 });
+$textData = array_filter($data, function ($row) {
+    return $row['tipe_pertanyaan'] === 'textbox';
+});
 ?>
 
 <!DOCTYPE html>
@@ -110,11 +113,18 @@ $checkboxData = array_filter($data, function ($row) {
             <table>
                 <thead>
                     <tr>
-                        <th>Pilihan</th>
+                        <th style="background-color: #5c4033; color: #fff;">Pilihan</th>
                         <?php 
-                        // Header pilihan
+                        // Array warna untuk header kolom
+                        $colors = ['#5c4033']; 
+                        $index = 0;
+                        
+                        // Header pilihan dengan warna latar belakang
                         foreach (array_keys($row['pilihan']) as $header): ?>
-                            <th><?php echo htmlspecialchars($header); ?></th>
+                            <th style="background-color: <?php echo $colors[$index % count($colors)]; ?>;">
+                                <?php echo htmlspecialchars($header); ?>
+                            </th>
+                            <?php $index++; ?>
                         <?php endforeach; ?>
                     </tr>
                 </thead>
@@ -130,6 +140,40 @@ $checkboxData = array_filter($data, function ($row) {
         <?php endforeach; ?>
     <?php else: ?>
         <p>Tidak ada data untuk pertanyaan tipe checkbox.</p>
+    <?php endif; ?>
+
+
+    <!-- Tabel Textbox -->
+    <?php if (!empty($textData)): ?>
+        <h2>Jawaban Teks</h2>
+        <?php foreach ($textData as $row): ?>
+            <h3><?php echo htmlspecialchars($row['nama_pertanyaan']); ?></h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Jawaban</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php if (!empty($row['jawaban_teks'])): ?>
+                        <?php 
+                        // Pisahkan jawaban berdasarkan koma
+                        $jawabanArray = explode(', ', $row['jawaban_teks']); 
+                        foreach ($jawabanArray as $jawaban): ?>
+                            <tr>
+                                <td><?php echo htmlspecialchars($jawaban); ?></td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <tr>
+                            <td>Tidak ada jawaban</td>
+                        </tr>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+        <?php endforeach; ?>
+    <?php else: ?>
+        <p>Tidak ada data untuk pertanyaan tipe textbox.</p>
     <?php endif; ?>
 
     <script>
