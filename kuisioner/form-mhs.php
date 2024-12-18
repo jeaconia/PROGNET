@@ -26,6 +26,7 @@ $result_dosen = $conn->query($sql_dosen);
 $sql_pertanyaan = "SELECT id, nama_pertanyaan, tipe_pertanyaan FROM pertanyaan";
 $result_pertanyaan = $conn->query($sql_pertanyaan);
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -104,7 +105,9 @@ $result_pertanyaan = $conn->query($sql_pertanyaan);
                     }
                     echo "</div>";
                 }
+            echo "Tidak ada data pertanyaan.";
             }
+            
             ?>
 
             <h2>Saran atau Masukan</h2>

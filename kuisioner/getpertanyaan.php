@@ -2,14 +2,14 @@
 session_start();
 include '../config.php';
 
-// Periksa apakah pengguna sudah login
+// Check if user is logged in
 if (!isset($_SESSION['user_id'])) {
-    header("Location: ../login-dosen/login.php");
+    header("Location: ../login-mahasiswa/login.php");
     exit;
 }
 
-// Fetch data from kuisioner table
-$sql = "SELECT * FROM kuisioner";
+// Fetch data from pertanyaan table
+$sql = "SELECT * FROM pertanyaan";
 $result = $conn->query($sql);
 
 if ($result->num_rows > 0) {

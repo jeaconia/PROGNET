@@ -8,16 +8,12 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
-// Fetch questions for the current kuisioner_id
-$kuisioner_id = $_SESSION['kuisioner_id'];
-
-// Handle form submission for answers
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nim_mahasiswa = $_POST['nim_mahasiswa'];
     $nip_dosen = $_POST['nip_dosen'];
-    $saran = $_POST['saran']; // Assuming 'saran' is always available
+    $saran = $_POST['saran'];
 
-    // Insert new kuisioner into the database
+    // Insert ke tabel kuisioner
     $sql_kuisioner = "INSERT INTO kuisioner (nim_mahasiswa, nip_dosen, saran) VALUES (?, ?, ?)";
     $stmt_kuisioner = $conn->prepare($sql_kuisioner);
     $stmt_kuisioner->bind_param("sss", $nim_mahasiswa, $nip_dosen, $saran);
@@ -25,46 +21,50 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($stmt_kuisioner->execute()) {
         $kuisioner_id = $stmt_kuisioner->insert_id;
 
-        // Now insert answers related to this kuisioner
-        foreach ($_POST as $key => $value) {
-            // Skip if it's not a valid question field
-            if (strpos($key, 'pertanyaan_') !== 0) continue;
+        // Process answers from 'jawaban'
+        if (isset($_POST['jawaban'])) {
+            foreach ($_POST['jawaban'] as $pertanyaan_id => $value) {
+                $pertanyaan_id = (int)$pertanyaan_id;
+                $pilihan_id = null;
+                $jawaban_teks = null;
 
-            $pertanyaan_id = (int) str_replace('pertanyaan_', '', $key);
-            $jawaban_teks = null;
-            $pilihan_id = null;
-
-            // Determine if the answer is a dropdown, checkbox, radio, or textbox
-            if (isset($_POST["jawaban_{$pertanyaan_id}_pilihan"])) {
-                // Dropdown, radio, or checkbox
-                $pilihan_id = (int) $_POST["jawaban_{$pertanyaan_id}_pilihan"];
-            } else {
-                // Textbox
-                $jawaban_teks = $value;
+                if (is_array($value)) {
+                    // Checkbox: multiple pilihan_id
+                    foreach ($value as $selected_pilihan_id) {
+                        $pilihan_id = (int)$selected_pilihan_id;
+                        $sql_jawaban = "INSERT INTO jawaban (kuisioner_id, pertanyaan_id, pilihan_id, jawaban_teks) VALUES (?, ?, ?, ?)";
+                        $stmt_jawaban = $conn->prepare($sql_jawaban);
+                        $stmt_jawaban->bind_param("iiis", $kuisioner_id, $pertanyaan_id, $pilihan_id, $jawaban_teks);
+                        $stmt_jawaban->execute();
+                        $stmt_jawaban->close();
+                    }
+                } elseif (is_numeric($value)) {
+                    // Dropdown or radio: single pilihan_id
+                    $pilihan_id = (int)$value;
+                    $sql_jawaban = "INSERT INTO jawaban (kuisioner_id, pertanyaan_id, pilihan_id, jawaban_teks) VALUES (?, ?, ?, ?)";
+                    $stmt_jawaban = $conn->prepare($sql_jawaban);
+                    $stmt_jawaban->bind_param("iiis", $kuisioner_id, $pertanyaan_id, $pilihan_id, $jawaban_teks);
+                    $stmt_jawaban->execute();
+                    $stmt_jawaban->close();
+                } else {
+                    // Textbox: jawaban_teks
+                    $jawaban_teks = $value;
+                    $sql_jawaban = "INSERT INTO jawaban (kuisioner_id, pertanyaan_id, pilihan_id, jawaban_teks) VALUES (?, ?, ?, ?)";
+                    $stmt_jawaban = $conn->prepare($sql_jawaban);
+                    $stmt_jawaban->bind_param("iiis", $kuisioner_id, $pertanyaan_id, $pilihan_id, $jawaban_teks);
+                    $stmt_jawaban->execute();
+                    $stmt_jawaban->close();
+                }
             }
-
-            // Insert answer into `jawaban` table
-            $sql_jawaban = "INSERT INTO jawaban (kuisioner_id, pertanyaan_id, pilihan_id, jawaban_teks) VALUES (?, ?, ?, ?)";
-            $stmt_jawaban = $conn->prepare($sql_jawaban);
-            $stmt_jawaban->bind_param("iiis", $kuisioner_id, $pertanyaan_id, $pilihan_id, $jawaban_teks);
-
-            if (!$stmt_jawaban->execute()) {
-                echo "<script>
-                    alert('Terjadi error saat menyimpan jawaban: " . addslashes($stmt_jawaban->error) . "');
-                </script>";
-            }
-
-            $stmt_jawaban->close();
         }
 
         echo "<script>
-            alert('Kuisioner berhasil disimpan!');
+            alert('Kuisioner dan jawaban berhasil disimpan!');
             window.location.href = '../login-mahasiswa/home.html';
         </script>";
-
     } else {
         echo "<script>
-            alert('Terjadi error saat menyimpan kuisioner: " . addslashes($stmt_kuisioner->error) . "');
+            alert('Gagal menyimpan kuisioner: " . addslashes($stmt_kuisioner->error) . "');
         </script>";
     }
 
