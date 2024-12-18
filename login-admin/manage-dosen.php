@@ -2,7 +2,7 @@
 session_start();
 include '../config.php'; // Koneksi database
 
-// Cek apakah admin sudah login
+// Periksa apakah pengguna sudah login
 if (!isset($_SESSION['admin_id'])) {
     header("Location: login.php");
     exit();
@@ -35,7 +35,7 @@ $result = $conn->query($sql);
     </nav>
 
     <h1>Kelola Dosen</h1>
-    <a href="register-mhs.php">Tambah Dosen</a>
+    <a href="register-dosen.php">Tambah Dosen</a>
 
     <!-- Tabel data dosen -->
     <section class="data-dosen">

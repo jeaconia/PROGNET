@@ -1,7 +1,8 @@
 <?php
-include '../config.php';
+session_start();
+include '../config.php'; // Koneksi database
 
-// Cek apakah admin sudah login
+// Periksa apakah pengguna sudah login
 if (!isset($_SESSION['admin_id'])) {
     header("Location: login.php");
     exit();
