@@ -3,9 +3,9 @@ session_start();
 include '../config.php';
 
 // Periksa apakah pengguna sudah login
-if (!isset($_SESSION['admin_id'])) {
-    header("Location: login.php");
-    exit();
+if (!isset($_SESSION['user_id'])) {
+    header("Location: ../login-mahasiswa/login.php");
+    exit;
 }
 
 $user_id = $_SESSION['user_id'];
@@ -23,17 +23,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Perbarui data di database
     if (!empty($password)) {
         $hashed_password = password_hash($password, PASSWORD_BCRYPT);
-        $sql = "UPDATE dosen SET nama = ?, email = ?, no_telp = ?, jurusan = ?, alamat = ?, password = ? WHERE id = ?";
+        $sql = "UPDATE mahasiswa SET nama = ?, email = ?, no_telp = ?, jurusan = ?, alamat = ?, password = ? WHERE id = ?";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("ssssssi", $nama, $email, $no_telp, $jurusan, $alamat, $hashed_password, $user_id);
     } else {
-        $sql = "UPDATE dosen SET nama = ?, email = ?, no_telp = ?, jurusan = ?, alamat = ? WHERE id = ?";
+        $sql = "UPDATE mahasiswa SET nama = ?, email = ?, no_telp = ?, jurusan = ?, alamat = ? WHERE id = ?";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("sssssi", $nama, $email, $no_telp, $jurusan, $alamat, $user_id);
     }
 
     if ($stmt->execute()) {
-        $message = "Profil berhasil diperbarui! <br> <a href='manage-dosen.php'>Kelola Dosen</a>";
+        $message = "Profil berhasil diperbarui! <br> <a href='data-diri.php'>Lihat Profil</a>";
     } else {
         $message = "Error: " . $stmt->error;
     }
@@ -41,22 +41,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 
 // Ambil data mahasiswa dari database untuk form
-$sql = "SELECT nip, nama, email, no_telp, jurusan, alamat FROM dosen WHERE id = ?";
+$sql = "SELECT nim, nama, email, no_telp, jurusan, alamat FROM mahasiswa WHERE id = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
-$stmt->bind_result($nip, $nama, $email, $no_telp, $jurusan, $alamat);
+$stmt->bind_result($nim, $nama, $email, $no_telp, $jurusan, $alamat);
 $stmt->fetch();
 $stmt->close();
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Update Profil Dosen</title>
+    <title>Update Profil Mahasiswa</title>
     <link rel="stylesheet" href="../styles.css">
 </head>
 <body>
@@ -73,13 +72,13 @@ $stmt->close();
     </nav>
 
     <div class="container-profil">
-        <h2>Edit Profil Dosen</h2>
+        <h2>Edit Profil Mahasiswa</h2>
         <?php if (!empty($message)): ?>
             <div class="message"><?php echo $message; ?></div>
         <?php endif; ?>
         <form method="POST" action="">
-            <label>NIP:</label>
-            <input type="text" value="<?php echo $nip; ?>" disabled><br>
+            <label>NIM:</label>
+            <input type="text" value="<?php echo $nim; ?>" disabled><br>
 
             <label>Nama:</label>
             <input type="text" name="nama" value="<?php echo $nama; ?>" required><br>
@@ -111,4 +110,3 @@ $stmt->close();
     </footer>
 </body>
 </html>
-

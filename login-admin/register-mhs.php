@@ -1,6 +1,12 @@
 <?php
 include '../config.php';
 
+// Cek apakah admin sudah login
+if (!isset($_SESSION['admin_id'])) {
+    header("Location: login.php");
+    exit();
+}
+
 $message = ""; // Variabel untuk menyimpan pesan
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -19,7 +25,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->bind_param("sssssss", $nim, $nama, $email, $no_telp, $jurusan, $alamat, $password);
 
     if ($stmt->execute()) {
-        $message = "Pendaftaran berhasil! <br> <a href='login.php'>Login sekarang</a>";
+        $message = "Pendaftaran berhasil! <br> <a href='manage-mhs.php'>Kelola Mahasiswa</a>";
     } else {
         $message = "Error: " . $stmt->error;
     }
@@ -37,7 +43,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <nav class="navbar">
         <div class="navbar-container">
             <ul class="navbar-links">
-                <li><a href="../index.html">Home</a></li>
+                <li><a href="home.php">Home</a></li>
             </ul>
         </div>
         <div class="navbar-logo">
@@ -65,7 +71,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <label>Password:</label>
             <input type="password" name="password" required><br>
             <button type="submit">Daftar</button>
-            <p>Sudah Punya akun? <a href="login.php">Masuk</a></p>
         </form>
     </div>
     <footer id="footer">

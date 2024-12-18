@@ -35,7 +35,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <nav class="navbar">
         <div class="navbar-container">
             <ul class="navbar-links">
-                <li><a href="../index.html">Home</a></li>
+                <li><a href="../index.php">Home</a></li>
             </ul>
         </div>
         <div class="navbar-logo">

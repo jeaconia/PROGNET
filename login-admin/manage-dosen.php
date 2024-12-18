@@ -8,26 +8,6 @@ if (!isset($_SESSION['admin_id'])) {
     exit();
 }
 
-// Proses tambah dosen
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $nip = $_POST['nip'];
-    $nama = $_POST['nama'];
-    $email = $_POST['email'];
-    $password = password_hash($_POST['password'], PASSWORD_DEFAULT); // Enkripsi password
-
-    $sql = "INSERT INTO dosen (nip, nama, email, password) VALUES (?, ?, ?, ?)";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ssss", $nip, $nama, $email, $password);
-
-    if ($stmt->execute()) {
-        echo "<script>alert('Dosen berhasil ditambahkan!'); window.location.href='manage-dosen.php';</script>";
-    } else {
-        echo "<script>alert('Terjadi kesalahan!');</script>";
-    }
-
-    $stmt->close();
-}
-
 // Ambil data dosen
 $sql = "SELECT id, nip, nama FROM dosen";
 $result = $conn->query($sql);
@@ -55,23 +35,7 @@ $result = $conn->query($sql);
     </nav>
 
     <h1>Kelola Dosen</h1>
-    <a href="register-dosen.php?id=<?php echo $row['id']; ?>">Tambah Dosen</a>
-
-    <!-- Form untuk tambah dosen -->
-    <section class="tambah-dosen">
-        <h2>Tambah Dosen</h2>
-        <form action="" method="POST">
-            <label>NIP:</label>
-            <input type="text" name="nip" required><br>
-            <label>Nama:</label>
-            <input type="text" name="nama" required><br>
-            <label>Email:</label>
-            <input type="email" name="email" required><br>
-            <label>Password:</label>
-            <input type="password" name="password" required><br>
-            <button type="submit">Tambah Dosen</button>
-        </form>
-    </section>
+    <a href="register-mhs.php">Tambah Dosen</a>
 
     <!-- Tabel data dosen -->
     <section class="data-dosen">

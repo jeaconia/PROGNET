@@ -3,9 +3,9 @@ session_start();
 include '../config.php';
 
 // Periksa apakah pengguna sudah login
-if (!isset($_SESSION['user_id'])) {
-    header("Location: ../login-mahasiswa/login.php");
-    exit;
+if (!isset($_SESSION['admin_id'])) {
+    header("Location: login.php");
+    exit();
 }
 
 $user_id = $_SESSION['user_id'];
@@ -20,7 +20,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Hapus sesi dan redirect ke halaman login setelah akun dihapus
         session_unset();
         session_destroy();
-        echo "Akun berhasil dihapus. <a href='../login-mahasiswa/login.php'>Kembali ke Login</a>";
+        echo "Akun berhasil dihapus. <a href='manage-mhs.php'>Kelola Mahasiswa</a>";
     } else {
         echo "Gagal menghapus akun: " . $stmt->error;
     }
@@ -41,7 +41,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <p>Apakah Anda yakin ingin menghapus akun Anda? Tindakan ini tidak dapat dibatalkan.</p>
     <form method="POST" action="">
         <button type="submit">Hapus Akun</button>
-        <a href="../data-diri.php">Batal</a>
+        <a href="manage-mhs.php">Batal</a>
     </form>
 </body>
 </html>

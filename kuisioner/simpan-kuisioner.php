@@ -60,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         echo "<script>
             alert('Kuisioner dan jawaban berhasil disimpan!');
-            window.location.href = '../login-mahasiswa/home.html';
+            window.location.href = '../login-mahasiswa/home.php';
         </script>";
     } else {
         echo "<script>

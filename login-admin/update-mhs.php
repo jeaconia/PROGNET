@@ -3,9 +3,9 @@ session_start();
 include '../config.php';
 
 // Periksa apakah pengguna sudah login
-if (!isset($_SESSION['user_id'])) {
-    header("Location: ../login-mahasiswa/login.php");
-    exit;
+if (!isset($_SESSION['admin_id'])) {
+    header("Location: login.php");
+    exit();
 }
 
 $user_id = $_SESSION['user_id'];
@@ -33,7 +33,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     if ($stmt->execute()) {
-        $message = "Profil berhasil diperbarui! <br> <a href='data-diri.php'>Lihat Profil</a>";
+        $message = "Profil berhasil diperbarui! <br> <a href='manage-mhs.php'>Kelola Mahasiswa</a>";
     } else {
         $message = "Error: " . $stmt->error;
     }
@@ -62,7 +62,7 @@ $stmt->close();
     <nav class="navbar">
         <div class="navbar-container">
             <ul class="navbar-links">
-                <li><a href="../index.html">Home</a></li>
+                <li><a href="home.php">Home</a></li>
                 <li><a href="logout.php">Logout</a></li>
             </ul>
         </div>

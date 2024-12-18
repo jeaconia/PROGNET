@@ -39,7 +39,7 @@ $result_pertanyaan = $conn->query($sql_pertanyaan);
     <nav class="navbar">
         <div class="navbar-container">
             <ul class="navbar-links">
-                <li><a href="../index.html">Home</a></li>
+                <li><a href="../login-mahasiswa/home.php">Home</a></li>
             </ul>
         </div>
         <div class="navbar-logo">

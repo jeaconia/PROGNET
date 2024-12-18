@@ -8,26 +8,6 @@ if (!isset($_SESSION['admin_id'])) {
     exit();
 }
 
-// Proses tambah mahasiswa
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $nim = $_POST['nim'];
-    $nama = $_POST['nama'];
-    $email = $_POST['email'];
-    $password = password_hash($_POST['password'], PASSWORD_DEFAULT); // Enkripsi password
-
-    $sql = "INSERT INTO mahasiswa (nim, nama, email, password) VALUES (?, ?, ?, ?)";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ssss", $nim, $nama, $email, $password);
-
-    if ($stmt->execute()) {
-        echo "<script>alert('Mahasiswa berhasil ditambahkan!'); window.location.href='manage-mhs.php';</script>";
-    } else {
-        echo "<script>alert('Terjadi kesalahan!');</script>";
-    }
-
-    $stmt->close();
-}
-
 // Ambil data mahasiswa
 $sql = "SELECT id, nim, nama FROM mahasiswa";
 $result = $conn->query($sql);
@@ -45,7 +25,7 @@ $result = $conn->query($sql);
     <nav class="navbar">
         <div class="navbar-container">
             <ul class="navbar-links">
-                <li><a href="../index.php">Home</a></li>
+                <li><a href="home.php">Home</a></li>
                 <li><a href="logout.php">Logout</a></li>
             </ul>
         </div>
@@ -55,23 +35,7 @@ $result = $conn->query($sql);
     </nav>
 
     <h1>Kelola Mahasiswa</h1>
-    <a href="register-mhs.php?id=<?php echo $row['id']; ?>">Tambah Mahasiswa</a>
-
-    <!-- Form untuk tambah mahasiswa -->
-    <section class="tambah-mahasiswa">
-        <h2>Tambah Mahasiswa</h2>
-        <form action="" method="POST">
-            <label>NIM:</label>
-            <input type="text" name="nim" required><br>
-            <label>Nama:</label>
-            <input type="text" name="nama" required><br>
-            <label>Email:</label>
-            <input type="email" name="email" required><br>
-            <label>Password:</label>
-            <input type="password" name="password" required><br>
-            <button type="submit">Tambah Mahasiswa</button>
-        </form>
-    </section>
+    <a href="register-mhs.php">Tambah Mahasiswa</a>
 
     <!-- Tabel data mahasiswa -->
     <section class="data-mahasiswa">

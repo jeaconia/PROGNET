@@ -3,9 +3,9 @@ session_start();
 include '../config.php';
 
 // Periksa apakah pengguna sudah login
-if (!isset($_SESSION['admin_id'])) {
+if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
-    exit();
+    exit;
 }
 
 $user_id = $_SESSION['user_id'];
@@ -33,7 +33,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     if ($stmt->execute()) {
-        $message = "Profil berhasil diperbarui! <br> <a href='manage-dosen.php'>Kelola Dosen</a>";
+        $message = "Profil berhasil diperbarui! <br> <a href='data-diri.php'>Lihat Profil</a>";
     } else {
         $message = "Error: " . $stmt->error;
     }

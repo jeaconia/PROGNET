@@ -34,7 +34,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <nav class="navbar">
         <div class="navbar-container">
             <ul class="navbar-links">
-                <li><a href="../index.html">Home</a></li>
+                <li><a href="../index.php">Home</a></li>
             </ul>
         </div>
         <div class="navbar-logo">
@@ -48,12 +48,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <label>Password:</label>
         <input type="password" name="password" required><br>
         <button type="submit">Login</button>
-        <p>Belum Punya akun? <a href="register.php">Daftar sekarang</a></p>
     </form>
     <footer id="footer">
         <div class="footer">
             <h2>Be the Next Generation</h2>
-            <p>Copyright © 2024 Dewita Cahyani. All rights reserved.</p>
+            <p>Copyright © 2024 AGS. All rights reserved.</p>
         </div>
     </footer>
 </body>

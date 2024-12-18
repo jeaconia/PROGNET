@@ -4,7 +4,7 @@ include '../config.php';
 
 // Periksa apakah pengguna sudah login
 if (!isset($_SESSION['user_id'])) {
-    header("Location: ../login-dosen/login.php");
+    header("Location: login.php");
     exit;
 }
 
@@ -30,7 +30,7 @@ $stmt->close();
     <nav class="navbar">
         <div class="navbar-container">
             <ul class="navbar-links">
-                <li><a href="../index.html">Home</a></li>
+                <li><a href="home.php">Home</a></li>
                 <li><a href="logout.php">Logout</a></li>
             </ul>
         </div>
@@ -62,7 +62,6 @@ $stmt->close();
                 <td><?php echo $row['alamat']; ?></td>
                 <td>
                 <a href="update.php">Edit Profil</a> </br>
-                <a href="delete.php">Delete Profil</a>
                 </td>
             </tr>
             <?php endforeach; ?>

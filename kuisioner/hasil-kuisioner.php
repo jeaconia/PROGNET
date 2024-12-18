@@ -4,7 +4,7 @@ include '../config.php';
 
 // Check if user is logged in
 if (!isset($_SESSION['user_id'])) {
-    header("Location: ../login-mahasiswa/login.php");
+    header("Location: ../login-dosen/login.php");
     exit;
 }
 
@@ -84,6 +84,14 @@ $checkboxData = array_filter($data, function ($row) {
     </style>
 </head>
 <body>
+    <nav class="navbar">
+            <div class="navbar-container">
+                <ul class="navbar-links">
+                    <li><a href="../login-dosen/home.php">Home</a></li>
+                    <li><a href="logout.php">Logout</a></li>
+                </ul>
+            </div>
+    </nav>
     <h1>Hasil Kuisioner</h1>
 
     <!-- Grafik Jawaban Radio dan Dropdown -->
@@ -161,5 +169,11 @@ $checkboxData = array_filter($data, function ($row) {
             });
         });
     </script>
+    <footer id="footer">
+        <div class="footer">
+            <h2>Be the Next Generation</h2>
+            <p>Copyright © 2024 AGS. All rights reserved.</p>
+        </div>
+    </footer>
 </body>
 </html>
