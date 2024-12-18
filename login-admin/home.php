@@ -30,10 +30,10 @@ if (!isset($_SESSION['admin_id'])) {
     </nav>
 
     <h1>Selamat Datang di Homepage Admin</h1>
-    <p>Halo, <b><?php echo htmlspecialchars($_SESSION['username']); ?></b>!</p>
-    <a href="profil.php">Data Diri Admin</a><br>
-    <a href="manage-users.php">Kelola Pengguna</a><br>
-    <a href="manage-kuisioner.php">Kelola Kuisioner</a>
+    <p>Halo, <b><?php echo htmlspecialchars($_SESSION['admin_username']); ?></b>!</p>
+    <a href="manage-mhs.php">Kelola Mahasiswa</a><br>
+    <a href="manage-dosen.php">Kelola Dosen</a><br>
+    <a href="../kuisioner/add-pertanyaan.php">Kelola Kuisioner</a>
 
     <footer id="footer">
         <div class="footer">

@@ -6,7 +6,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = $_POST['username'];
     $password = $_POST['password'];
 
-    // Sesuaikan query dengan kolom `passkey` di database
+    // Query untuk mendapatkan username dan hash password
     $sql = "SELECT id, username, passkey FROM admin WHERE username = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("s", $username);
@@ -14,15 +14,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->bind_result($id, $fetched_username, $hashed_passkey);
     $stmt->fetch();
 
-    // Verifikasi password dengan hash
-    if (password_verify($password, $hashed_passkey)) {
+    // Verifikasi password dengan hash SHA256
+    if (hash('sha256', $password) === $hashed_passkey) {
         $_SESSION['admin_id'] = $id;
         $_SESSION['admin_username'] = $fetched_username;
-        header("Location: dashboard.php");
+        header("Location: home.php");
         exit;
     } else {
         echo "<script>alert('Username atau password salah!');</script>";
     }
+
     $stmt->close();
 }
 ?>
@@ -36,7 +37,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <nav class="navbar">
         <div class="navbar-container">
             <ul class="navbar-links">
-                <li><a href="../index.html">Home</a></li>
+                <li><a href="../index.php">Home</a></li>
             </ul>
         </div>
         <div class="navbar-logo">

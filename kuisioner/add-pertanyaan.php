@@ -1,10 +1,10 @@
 <?php
 session_start();
-include 'config.php';
+include '../config.php';
 
 // Periksa apakah pengguna sudah login
 if (!isset($_SESSION['user_id'])) {
-    header("Location: login.php");
+    header("Location: ../login-admin/login.php");
     exit;
 }
 
@@ -114,11 +114,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <div class="choice-item">
                         <input type="text" name="pilihan[]" placeholder="Masukkan pilihan" required>
                         <button type="button" onclick="removeChoiceField(this)">Hapus</button>
+                        <br><br>
                     </div>
                 </div>
+                <br>
                 <button type="button" onclick="addChoiceField()">Tambah Pilihan</button>
             </div>
-
+                <br>
             <button type="submit">Simpan</button>
         </form>
     </div>
