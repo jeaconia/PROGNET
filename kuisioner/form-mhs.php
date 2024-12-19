@@ -112,7 +112,7 @@ $result_pertanyaan = $conn->query($sql_pertanyaan);
 
             <h2>Saran atau Masukan</h2>
             <div class="question-box">
-                <label>10. Adakah masukan/saran terkait kinerja dosen untuk tahun ajaran berikutnya?</label>
+                <label>Adakah masukan/saran terkait kinerja dosen untuk tahun ajaran berikutnya?</label>
                 <textarea name="saran" rows="4" placeholder="Masukkan saran Anda di sini..." required></textarea>
             </div>
 
