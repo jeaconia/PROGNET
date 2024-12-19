@@ -32,8 +32,8 @@ if (!isset($_SESSION['admin_id'])) {
 
     <h1>Selamat Datang di Homepage Admin</h1>
     <p>Halo, <b><?php echo htmlspecialchars($_SESSION['admin_username']); ?></b>!</p>
-    <a href="manage-mhs.php">Kelola Mahasiswa</a><br>
-    <a href="manage-dosen.php">Kelola Dosen</a><br>
+    <a href="manage-mhs.php">Kelola Mahasiswa</a>
+    <a href="manage-dosen.php">Kelola Dosen</a>
     <a href="../kuisioner/add-pertanyaan.php">Kelola Kuisioner</a>
 
     <footer id="footer">

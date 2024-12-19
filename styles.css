@@ -212,6 +212,11 @@ table th, table td {
     padding-bottom: 10rem;
 }
 
+.container-add {
+    padding-top: 10rem;
+    padding-bottom: 10rem;
+}
+
 .message {
     margin-top: 20px; /* Jarak atas untuk pesan */
     padding: 10px; /* Jarak dalam untuk pesan */
@@ -354,3 +359,7 @@ footer p {
     background-color: #b58840; /* Warna merah gelap */
 }
 
+.chart-container {
+    margin: 20px auto;
+    width: 80%;
+}

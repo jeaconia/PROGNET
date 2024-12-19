@@ -10,16 +10,16 @@ if (!isset($_SESSION['user_id'])) {
 
 // Fetch data for results
 $sql = "SELECT 
-            p.id,
-            p.nama_pertanyaan,
-            p.tipe_pertanyaan,
-            pi.pilihan,
-            COUNT(j.pilihan_id) AS total,
-            GROUP_CONCAT(j.jawaban_teks SEPARATOR ', ') AS jawaban_teks
-        FROM pertanyaan p
-        LEFT JOIN pilihan pi ON p.id = pi.pertanyaan_id
-        LEFT JOIN jawaban j ON pi.id = j.pilihan_id
-        GROUP BY p.id, pi.pilihan";
+    p.id,
+    p.nama_pertanyaan,
+    p.tipe_pertanyaan,
+    pi.pilihan,
+    COUNT(j.pilihan_id) AS total,
+    GROUP_CONCAT(j.jawaban_teks SEPARATOR ', ') AS jawaban_teks
+FROM pertanyaan p
+LEFT JOIN pilihan pi ON p.id = pi.pertanyaan_id
+LEFT JOIN jawaban j ON p.id = j.pertanyaan_id AND (pi.id = j.pilihan_id OR j.jawaban_teks IS NOT NULL)
+GROUP BY p.id, pi.id";
 
 $result = $conn->query($sql);
 
@@ -59,122 +59,85 @@ $textData = array_filter($data, function ($row) {
     <title>Hasil Kuisioner</title>
     <link rel="stylesheet" href="../styles.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-        h1, h2 {
-            text-align: center;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: center;
-        }
-        th {
-            background-color: #f4f4f4;
-        }
-        .chart-container {
-            margin: 20px auto;
-            width: 80%;
-        }
-    </style>
 </head>
 <body>
     <nav class="navbar">
-            <div class="navbar-container">
-                <ul class="navbar-links">
-                    <li><a href="../login-dosen/home.php">Home</a></li>
-                    <li><a href="logout.php">Logout</a></li>
-                </ul>
-            </div>
+        <div class="navbar-container">
+            <ul class="navbar-links">
+                <li><a href="../login-dosen/home.php">Home</a></li>
+                <li><a href="logout.php">Logout</a></li>
+            </ul>
+        </div>
     </nav>
-    <h1>Hasil Kuisioner</h1>
 
-    <!-- Grafik Jawaban Radio dan Dropdown -->
-    <div id="charts-container" class="chart-container">
-    <?php foreach ($radioAndDropdownData as $id => $row): ?>
-        <h3><?php echo htmlspecialchars($row['nama_pertanyaan']); ?></h3>
-        <canvas id="chart-<?php echo $id; ?>" style="margin-bottom: 20px;"></canvas>
-    <?php endforeach; ?>
-    </div>
+    <div class="container">
+        <h1>Hasil Kuisioner</h1>
 
+        <!-- Grafik Jawaban Radio dan Dropdown -->
+        <div id="charts-container" class="chart-container">
+            <?php foreach ($radioAndDropdownData as $id => $row): ?>
+                <h3><?php echo htmlspecialchars($row['nama_pertanyaan']); ?></h3>
+                <canvas id="chart-<?php echo $id; ?>" style="margin-bottom: 20px;"></canvas>
+            <?php endforeach; ?>
+        </div>
 
-    <!-- Tabel Checkbox -->
-    <?php if (!empty($checkboxData)): ?>
-        <?php foreach ($checkboxData as $row): ?>
-            <h3><?php echo htmlspecialchars($row['nama_pertanyaan']); ?></h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th style="background-color: #5c4033; color: #fff;">Pilihan</th>
-                        <?php 
-                        // Array warna untuk header kolom
-                        $colors = ['#5c4033']; 
-                        $index = 0;
-                        
-                        // Header pilihan dengan warna latar belakang
-                        foreach (array_keys($row['pilihan']) as $header): ?>
-                            <th style="background-color: <?php echo $colors[$index % count($colors)]; ?>;">
-                                <?php echo htmlspecialchars($header); ?>
-                            </th>
-                            <?php $index++; ?>
-                        <?php endforeach; ?>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Jumlah</td>
-                        <?php foreach ($row['pilihan'] as $jumlah): ?>
-                            <td><?php echo $jumlah; ?></td>
-                        <?php endforeach; ?>
-                    </tr>
-                </tbody>
-            </table>
-        <?php endforeach; ?>
-    <?php else: ?>
-        <p>Tidak ada data untuk pertanyaan tipe checkbox.</p>
-    <?php endif; ?>
-
-
-    <!-- Tabel Textbox -->
-    <?php if (!empty($textData)): ?>
-        <h2>Jawaban Teks</h2>
-        <?php foreach ($textData as $row): ?>
-            <h3><?php echo htmlspecialchars($row['nama_pertanyaan']); ?></h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Jawaban</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php if (!empty($row['jawaban_teks'])): ?>
-                        <?php 
-                        // Pisahkan jawaban berdasarkan koma
-                        $jawabanArray = explode(', ', $row['jawaban_teks']); 
-                        foreach ($jawabanArray as $jawaban): ?>
-                            <tr>
-                                <td><?php echo htmlspecialchars($jawaban); ?></td>
-                            </tr>
-                        <?php endforeach; ?>
-                    <?php else: ?>
+        <!-- Tabel Checkbox -->
+        <?php if (!empty($checkboxData)): ?>
+            <?php foreach ($checkboxData as $row): ?>
+                <h3><?php echo htmlspecialchars($row['nama_pertanyaan']); ?></h3>
+                <table>
+                    <thead>
                         <tr>
-                            <td>Tidak ada jawaban</td>
+                            <th>Pilihan</th>
+                            <?php foreach (array_keys($row['pilihan']) as $header): ?>
+                                <th><?php echo htmlspecialchars($header); ?></th>
+                            <?php endforeach; ?>
                         </tr>
-                    <?php endif; ?>
-                </tbody>
-            </table>
-        <?php endforeach; ?>
-    <?php else: ?>
-        <p>Tidak ada data untuk pertanyaan tipe textbox.</p>
-    <?php endif; ?>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Jumlah</td>
+                            <?php foreach ($row['pilihan'] as $jumlah): ?>
+                                <td><?php echo $jumlah; ?></td>
+                            <?php endforeach; ?>
+                        </tr>
+                    </tbody>
+                </table>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <p>Tidak ada data untuk pertanyaan tipe checkbox.</p>
+        <?php endif; ?>
+
+        <!-- Tabel Textbox -->
+        <?php if (!empty($textData)): ?>
+            <h2>Jawaban Teks</h2>
+            <?php foreach ($textData as $row): ?>
+                <h3><?php echo htmlspecialchars($row['nama_pertanyaan']); ?></h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Jawaban</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php if (!empty($row['jawaban_teks'])): ?>
+                            <?php foreach (explode(', ', $row['jawaban_teks']) as $jawaban): ?>
+                                <tr>
+                                    <td><?php echo htmlspecialchars($jawaban); ?></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <tr>
+                                <td>Tidak ada jawaban</td>
+                            </tr>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <p>Tidak ada data untuk pertanyaan tipe textbox.</p>
+        <?php endif; ?>
+    </div>
 
     <script>
         const radioAndDropdownData = <?php echo json_encode($radioAndDropdownData); ?>;
@@ -213,10 +176,11 @@ $textData = array_filter($data, function ($row) {
             });
         });
     </script>
+
     <footer id="footer">
         <div class="footer">
             <h2>Be the Next Generation</h2>
-            <p>Copyright © 2024 AGS. All rights reserved.</p>
+            <p>Copyright &copy; 2024 AGS. All rights reserved.</p>
         </div>
     </footer>
 </body>

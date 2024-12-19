@@ -1,11 +1,11 @@
 <?php
 session_start();
-include '../config.php';
+include '../config.php'; // Koneksi database
 
 // Periksa apakah pengguna sudah login
-if (!isset($_SESSION['user_id'])) {
-    header("Location: ../login-admin/login.php");
-    exit;
+if (!isset($_SESSION['admin_id'])) {
+    header("Location: login.php");
+    exit();
 }
 
 $message = ""; // Variabel untuk pesan sukses/error
@@ -14,7 +14,7 @@ $message = ""; // Variabel untuk pesan sukses/error
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nama_pertanyaan = $_POST['nama_pertanyaan'];
     $tipe_pertanyaan = $_POST['tipe_pertanyaan'];
-    $pilihan = isset($_POST['pilihan']) ? $_POST['pilihan'] : [];
+    $pilihan = isset($_POST['pilihan']) ? array_filter($_POST['pilihan']) : []; // Hanya ambil pilihan yang tidak kosong
 
     // Tambahkan pertanyaan ke tabel pertanyaan
     if (!empty($nama_pertanyaan) && !empty($tipe_pertanyaan)) {
@@ -31,10 +31,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $stmt_pilihan = $conn->prepare($sql_pilihan);
 
                 foreach ($pilihan as $item) {
-                    if (!empty($item)) {
-                        $stmt_pilihan->bind_param("is", $pertanyaan_id, $item);
-                        $stmt_pilihan->execute();
-                    }
+                    $stmt_pilihan->bind_param("is", $pertanyaan_id, $item);
+                    $stmt_pilihan->execute();
                 }
                 $stmt_pilihan->close();
             }
@@ -65,11 +63,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             const div = document.createElement('div');
             div.classList.add('choice-item');
             div.innerHTML = `
-                <input type="text" name="pilihan[]" placeholder="Masukkan pilihan" required>
+                <input type="text" name="pilihan[]" placeholder="Masukkan pilihan">
                 <button type="button" onclick="removeChoiceField(this)">Hapus</button>
             `;
             container.appendChild(div);
         }
+
 
         // Fungsi untuk menghapus input pilihan
         function removeChoiceField(button) {
@@ -85,9 +84,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <li><a href="logout.php">Logout</a></li>
             </ul>
         </div>
+        <div class="navbar-logo">
+            <img src="../img/logo-teknologi-informasi-universitas-udayana-ti-unud-jhonarendra.png" alt="Logo" class="logo">
+        </div>
     </nav>
 
-    <div class="container">
+    <div class="container-add">
         <h2>Tambah Pertanyaan dan Pilihan</h2>
 
         <?php if (!empty($message)): ?>
@@ -112,7 +114,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <div id="choice-container">
                     <!-- Input awal untuk pilihan -->
                     <div class="choice-item">
-                        <input type="text" name="pilihan[]" placeholder="Masukkan pilihan" required>
+                        <input type="text" name="pilihan[]" placeholder="Masukkan pilihan">
                         <button type="button" onclick="removeChoiceField(this)">Hapus</button>
                         <br><br>
                     </div>

@@ -21,6 +21,10 @@ CREATE TABLE pilihan (
     FOREIGN KEY (pertanyaan_id) REFERENCES pertanyaan(id)
 );
 
+ALTER TABLE pilihan
+MODIFY COLUMN pilihan VARCHAR(255) NULL;
+
+
 CREATE TABLE jawaban (
     id INT AUTO_INCREMENT PRIMARY KEY,
     kuisioner_id INT NOT NULL,
