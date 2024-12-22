@@ -9,7 +9,7 @@ if (!isset($_SESSION['admin_id'])) {
 }
 
 // Ambil data dosen
-$sql = "SELECT id, nip, nama FROM dosen";
+$sql = "SELECT id, nip, nama, email, no_telp, jurusan, alamat FROM dosen";
 $result = $conn->query($sql);
 ?>
 
@@ -42,17 +42,25 @@ $result = $conn->query($sql);
         <h2>Data Dosen</h2>
         <table class="styled-table">
             <thead>
-                <tr>
-                    <th>NIP</th>
-                    <th>Nama</th>
-                    <th>Aksi</th>
-                </tr>
+            <tr>
+                <th>NIP</th>
+                <th>Nama</th>
+                <th>Email</th>
+                <th>No Telepon</th>
+                <th>Jurusan</th>
+                <th>Alamat</th>
+                <th>Aksi</th>
+            </tr>
             </thead>
             <tbody>
                 <?php while ($row = $result->fetch_assoc()): ?>
                 <tr>
                     <td><?php echo $row['nip']; ?></td>
                     <td><?php echo $row['nama']; ?></td>
+                    <td><?php echo $row['email']; ?></td>
+                    <td><?php echo $row['no_telp']; ?></td>
+                    <td><?php echo $row['jurusan']; ?></td>
+                    <td><?php echo $row['alamat']; ?></td>
                     <td>
                         <a href="update-dosen.php?id=<?php echo $row['id']; ?>">Edit</a>
                         <a href="delete-dosen.php?id=<?php echo $row['id']; ?>">Hapus</a>

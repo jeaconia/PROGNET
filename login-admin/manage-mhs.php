@@ -9,7 +9,7 @@ if (!isset($_SESSION['admin_id'])) {
 }
 
 // Ambil data mahasiswa
-$sql = "SELECT id, nim, nama FROM mahasiswa";
+$sql = "SELECT id, nim, nama, email, no_telp, jurusan, alamat FROM mahasiswa";
 $result = $conn->query($sql);
 ?>
 
@@ -45,6 +45,10 @@ $result = $conn->query($sql);
                 <tr>
                     <th>NIM</th>
                     <th>Nama</th>
+                    <th>Email</th>
+                    <th>No Telepon</th>
+                    <th>Jurusan</th>
+                    <th>Alamat</th>
                     <th>Aksi</th>
                 </tr>
             </thead>
@@ -53,6 +57,10 @@ $result = $conn->query($sql);
                 <tr>
                     <td><?php echo $row['nim']; ?></td>
                     <td><?php echo $row['nama']; ?></td>
+                    <td><?php echo $row['email']; ?></td>
+                    <td><?php echo $row['no_telp']; ?></td>
+                    <td><?php echo $row['jurusan']; ?></td>
+                    <td><?php echo $row['alamat']; ?></td>
                     <td>
                         <a href="update-mhs.php?id=<?php echo $row['id']; ?>">Edit</a>
                         <a href="delete-mhs.php?id=<?php echo $row['id']; ?>">Hapus</a>
