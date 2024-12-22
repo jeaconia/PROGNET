@@ -8,7 +8,9 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
-// Fetch data for results
+$user_id = $_SESSION['user_id'];  // Get the user_id (nip_dosen) from the session
+
+// Updated SQL query: Join the 'user' table with 'jawaban' and filter by the logged-in user's nip_dosen
 $sql = "SELECT 
     p.id,
     p.nama_pertanyaan,
@@ -18,11 +20,30 @@ $sql = "SELECT
     GROUP_CONCAT(j.jawaban_teks SEPARATOR ', ') AS jawaban_teks
 FROM pertanyaan p
 LEFT JOIN pilihan pi ON p.id = pi.pertanyaan_id
-LEFT JOIN jawaban j ON p.id = j.pertanyaan_id AND (pi.id = j.pilihan_id OR j.jawaban_teks IS NOT NULL)
+LEFT JOIN jawaban j ON p.id = j.pertanyaan_id 
+    AND (pi.id = j.pilihan_id OR j.jawaban_teks IS NOT NULL)
+LEFT JOIN dosen u ON u.nip = j.nip_dosen  -- Join with user table to get nip_dosen
+WHERE u.id = ?  -- Use the logged-in user's ID to filter
 GROUP BY p.id, pi.id";
 
-$result = $conn->query($sql);
+// Prepare the statement
+$stmt = $conn->prepare($sql);
 
+// Check if the statement was prepared successfully
+if ($stmt === false) {
+    die("Error preparing SQL statement: " . $conn->error);
+}
+
+// Bind the user_id parameter to the prepared statement (assuming user_id is the ID of the logged-in user)
+$stmt->bind_param("i", $user_id);  // Assuming user_id is an integer (adjust if needed)
+
+// Execute the prepared statement
+$stmt->execute();
+
+// Get the result
+$result = $stmt->get_result();
+
+// Process the result
 $data = [];
 if ($result && $result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
@@ -71,7 +92,7 @@ $textData = array_filter($data, function ($row) {
 
     <div class="container">
         <h1>Hasil Kuisioner</h1>
-        <a href="../kuisioner/view-mhs">Mahasiswa yang Mengisi</a>
+        <a href="../kuisioner/view-mhs.php">Mahasiswa yang Mengisi</a>
 
         <!-- Grafik untuk Radio, Dropdown, dan Checkbox -->
         <div id="charts-container" class="chart-container">
