@@ -7,47 +7,54 @@ if (!isset($_SESSION['admin_id'])) {
     exit();
 }
 
-
 $message = ""; // Variabel untuk pesan sukses/error
+
+// Fungsi untuk menyimpan pertanyaan dan pilihan ke database
+function simpanPertanyaan($conn, $nama_pertanyaan, $tipe_pertanyaan, $pilihan = []) {
+    global $message;
+
+    // Tambahkan pertanyaan ke tabel pertanyaan
+    $sql_pertanyaan = "INSERT INTO pertanyaan (nama_pertanyaan, tipe_pertanyaan) VALUES (?, ?)";
+    $stmt_pertanyaan = $conn->prepare($sql_pertanyaan);
+    $stmt_pertanyaan->bind_param("ss", $nama_pertanyaan, $tipe_pertanyaan);
+
+    if ($stmt_pertanyaan->execute()) {
+        $pertanyaan_id = $stmt_pertanyaan->insert_id; // ID pertanyaan yang baru ditambahkan
+
+        // Jika tipe pertanyaan memerlukan pilihan, tambahkan ke tabel pilihan
+        if (in_array($tipe_pertanyaan, ['dropdown', 'checkbox', 'radio']) && !empty($pilihan)) {
+            $sql_pilihan = "INSERT INTO pilihan (pertanyaan_id, pilihan) VALUES (?, ?)";
+            $stmt_pilihan = $conn->prepare($sql_pilihan);
+
+            foreach ($pilihan as $item) {
+                $stmt_pilihan->bind_param("is", $pertanyaan_id, $item);
+                $stmt_pilihan->execute();
+            }
+            $stmt_pilihan->close();
+        }
+
+        $message = "Pertanyaan berhasil ditambahkan! <br><a href='view-pertanyaan.php'>Kelola Pertanyaan</a>";
+    } else {
+        $message = "Error: " . $stmt_pertanyaan->error;
+    }
+
+    $stmt_pertanyaan->close();
+}
 
 // Proses jika form disubmit
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nama_pertanyaan = $_POST['nama_pertanyaan'];
     $tipe_pertanyaan = $_POST['tipe_pertanyaan'];
-    $pilihan = isset($_POST['pilihan']) ? array_filter($_POST['pilihan']) : []; // Hanya ambil pilihan yang tidak kosong
+    $pilihan = isset($_POST['pilihan']) ? array_filter($_POST['pilihan']) : []; // Ambil hanya pilihan yang tidak kosong
 
-    // Tambahkan pertanyaan ke tabel pertanyaan
     if (!empty($nama_pertanyaan) && !empty($tipe_pertanyaan)) {
-        $sql_pertanyaan = "INSERT INTO pertanyaan (nama_pertanyaan, tipe_pertanyaan) VALUES (?, ?)";
-        $stmt_pertanyaan = $conn->prepare($sql_pertanyaan);
-        $stmt_pertanyaan->bind_param("ss", $nama_pertanyaan, $tipe_pertanyaan);
-
-        if ($stmt_pertanyaan->execute()) {
-            $pertanyaan_id = $stmt_pertanyaan->insert_id; // Dapatkan ID pertanyaan yang baru ditambahkan
-
-            // Jika tipe pertanyaan memerlukan pilihan, tambahkan ke tabel pilihan
-            if (in_array($tipe_pertanyaan, ['dropdown', 'checkbox', 'radio']) && !empty($pilihan)) {
-                $sql_pilihan = "INSERT INTO pilihan (pertanyaan_id, pilihan) VALUES (?, ?)";
-                $stmt_pilihan = $conn->prepare($sql_pilihan);
-
-                foreach ($pilihan as $item) {
-                    $stmt_pilihan->bind_param("is", $pertanyaan_id, $item);
-                    $stmt_pilihan->execute();
-                }
-                $stmt_pilihan->close();
-            }
-
-            $message = "Pertanyaan dan pilihan berhasil ditambahkan!";
-        } else {
-            $message = "Error: " . $stmt_pertanyaan->error;
-        }
-
-        $stmt_pertanyaan->close();
+        simpanPertanyaan($conn, $nama_pertanyaan, $tipe_pertanyaan, $pilihan);
     } else {
         $message = "Nama pertanyaan dan tipe pertanyaan harus diisi.";
     }
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
