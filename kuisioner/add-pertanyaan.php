@@ -1,12 +1,12 @@
 <?php
 session_start();
-include '../config.php'; // Koneksi database
+include '../config.php';
 
-// Periksa apakah pengguna sudah login
 if (!isset($_SESSION['admin_id'])) {
-    header("Location: login.php");
+    header("Location: ../login-admin/login.php");
     exit();
 }
+
 
 $message = ""; // Variabel untuk pesan sukses/error
 

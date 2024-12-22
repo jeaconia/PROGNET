@@ -2,11 +2,11 @@
 session_start();
 include '../config.php';
 
-// Periksa apakah admin sudah login
 if (!isset($_SESSION['admin_id'])) {
-    header("Location: login.php");
+    header("Location: ../login-admin/login.php");
     exit();
 }
+
 
 $message = "";
 

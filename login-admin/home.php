@@ -34,7 +34,7 @@ if (!isset($_SESSION['admin_id'])) {
     <p>Halo, <b><?php echo htmlspecialchars($_SESSION['admin_username']); ?></b>!</p>
     <a href="manage-mhs.php">Kelola Mahasiswa</a>
     <a href="manage-dosen.php">Kelola Dosen</a>
-    <a href="../kuisioner/add-pertanyaan.php">Kelola Kuisioner</a>
+    <a href="../kuisioner/view-pertanyaan.php">Kelola Kuisioner</a>
 
     <footer id="footer">
         <div class="footer">
