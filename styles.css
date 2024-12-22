@@ -364,3 +364,34 @@ footer p {
     width: 80%;
 }
 
+/* Untuk opsi radio button (horizontal) */
+.radio-group {
+    display: flex;
+    gap: 10px; /* Jarak antar opsi */
+    align-items: left; /* Teks sejajar dengan tombol radio */
+    margin-bottom: 10px; /* Jarak antar grup pertanyaan */
+}
+
+/* Untuk opsi checkbox (vertikal) */
+.checkbox-group {
+    display: flex;
+    flex-direction:row; /* Tampilkan secara vertikal */
+    gap: 5px; /* Jarak kecil antar checkbox */
+    margin-bottom: 10px; /* Jarak antar grup pertanyaan */
+}
+
+/* Umum untuk semua label */
+.radio-group label,
+.checkbox-group label {
+    display: flex;
+    align-items: left;
+    font-size: 14px;
+    color: #5c4033; /* Warna teks */
+}
+
+/* Spasi kecil antara input dan teks */
+.radio-group input[type="radio"],
+.checkbox-group input[type="checkbox"] {
+    margin-right: 5px;
+}
+
