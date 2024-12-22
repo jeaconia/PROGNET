@@ -14,11 +14,11 @@
     </header>
     <main>
         <nav>
-            <a href="http://localhost/PROGNET/login-dosen/login.php" class="button">Dosen</a>
+            <a href="../PROGNET/login-dosen/login.php" class="button">Dosen</a>
             <br>
-            <a href="http://localhost/PROGNET/login-mahasiswa/login.php" class="button">Mahasiswa</a>
+            <a href="../PROGNET/login-mahasiswa/login.php" class="button">Mahasiswa</a>
             <br>
-            <a href="http://localhost/PROGNET/login-admin/login.php" class="button">Admin</a>
+            <a href="../PROGNET/login-admin/login.php" class="button">Admin</a>
         </nav>
     </main>
     <footer id="footer">
