@@ -79,6 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="navbar-container">
             <ul class="navbar-links">
                 <li><a href="../login-mahasiswa/home.php">Home</a></li>
+                <li><a href="../login-mahasiswa/logout.php">Logout</a></li>
             </ul>
         </div>
     </nav>
