@@ -10,7 +10,7 @@ $sql = "SELECT k.nim_mahasiswa, m.nama, k.created_at
 $result = $conn->query($sql);
 
 if (!$result) {
-    die("Error di query: " . $conn->error); // Tampilkan error jika query gagal
+    die("Query error: " . $conn->error); // Debug jika query gagal
 }
 ?>
 
@@ -52,3 +52,4 @@ if (!$result) {
     </div>
 </body>
 </html>
+
