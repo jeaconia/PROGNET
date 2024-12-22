@@ -175,10 +175,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 echo "<p>Tidak ada pertanyaan yang tersedia.</p>";
             }
             ?>
-            <div class="question-box">
-                <label for="saran">Masukan atau Saran:</label>
-                <textarea name="saran" id="saran" rows="4" required></textarea>
-            </div>
             <button type="submit" class="button">Kirim</button>
         </form>
     </div>

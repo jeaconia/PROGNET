@@ -106,11 +106,13 @@ $textData = array_filter($data, function ($row) {
     </div>
 
     <script>
+        // Ambil data visual dari PHP
         const visualData = <?php echo json_encode($visualData); ?>;
 
+        // Render setiap grafik
         Object.keys(visualData).forEach(id => {
             const row = visualData[id];
-            const ctx = document.getElementById(chart-${id}).getContext('2d');
+            const ctx = document.getElementById(`chart-${id}`).getContext('2d');
             new Chart(ctx, {
                 type: 'bar',
                 data: {
