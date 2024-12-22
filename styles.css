@@ -85,7 +85,7 @@ form input {
 form button {
     width: 105%;
     padding: 10px;
-    background-color: #5c4033;
+    background-color: #d4a657;
     color: #fff;
     border: none;
     border-radius: 4px;
@@ -363,3 +363,4 @@ footer p {
     margin: 20px auto;
     width: 80%;
 }
+
