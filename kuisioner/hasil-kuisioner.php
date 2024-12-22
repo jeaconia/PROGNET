@@ -35,16 +35,15 @@ if ($result && $result->num_rows > 0) {
                 'jawaban_teks' => $row['jawaban_teks'] ?: null
             ];
         }
-        $data[$pertanyaanId]['pilihan'][$row['pilihan']] = $row['total'];
+        if (!empty($row['pilihan'])) {
+            $data[$pertanyaanId]['pilihan'][$row['pilihan']] = $row['total'];
+        }
     }
 }
 
 // Separate data by type
-$radioAndDropdownData = array_filter($data, function ($row) {
-    return in_array($row['tipe_pertanyaan'], ['radio', 'dropdown']);
-});
-$checkboxData = array_filter($data, function ($row) {
-    return $row['tipe_pertanyaan'] === 'checkbox';
+$visualData = array_filter($data, function ($row) {
+    return in_array($row['tipe_pertanyaan'], ['radio', 'dropdown', 'checkbox']);
 });
 $textData = array_filter($data, function ($row) {
     return $row['tipe_pertanyaan'] === 'textbox';
@@ -65,7 +64,7 @@ $textData = array_filter($data, function ($row) {
         <div class="navbar-container">
             <ul class="navbar-links">
                 <li><a href="../login-dosen/home.php">Home</a></li>
-                <li><a href="logout.php">Logout</a></li>
+                <li><a href="../login-dosen/logout.php">Logout</a></li>
             </ul>
         </div>
     </nav>
@@ -73,42 +72,15 @@ $textData = array_filter($data, function ($row) {
     <div class="container">
         <h1>Hasil Kuisioner</h1>
 
-        <!-- Grafik Jawaban Radio dan Dropdown -->
+        <!-- Grafik untuk Radio, Dropdown, dan Checkbox -->
         <div id="charts-container" class="chart-container">
-            <?php foreach ($radioAndDropdownData as $id => $row): ?>
+            <?php foreach ($visualData as $id => $row): ?>
                 <h3><?php echo htmlspecialchars($row['nama_pertanyaan']); ?></h3>
                 <canvas id="chart-<?php echo $id; ?>" style="margin-bottom: 20px;"></canvas>
             <?php endforeach; ?>
         </div>
 
-        <!-- Tabel Checkbox -->
-        <?php if (!empty($checkboxData)): ?>
-            <?php foreach ($checkboxData as $row): ?>
-                <h3><?php echo htmlspecialchars($row['nama_pertanyaan']); ?></h3>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Pilihan</th>
-                            <?php foreach (array_keys($row['pilihan']) as $header): ?>
-                                <th><?php echo htmlspecialchars($header); ?></th>
-                            <?php endforeach; ?>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Jumlah</td>
-                            <?php foreach ($row['pilihan'] as $jumlah): ?>
-                                <td><?php echo $jumlah; ?></td>
-                            <?php endforeach; ?>
-                        </tr>
-                    </tbody>
-                </table>
-            <?php endforeach; ?>
-        <?php else: ?>
-            <p>Tidak ada data untuk pertanyaan tipe checkbox.</p>
-        <?php endif; ?>
-
-        <!-- Tabel Textbox -->
+        <!-- Tabel untuk Jawaban Teks -->
         <?php if (!empty($textData)): ?>
             <h2>Jawaban Teks</h2>
             <?php foreach ($textData as $row): ?>
@@ -126,25 +98,19 @@ $textData = array_filter($data, function ($row) {
                                     <td><?php echo htmlspecialchars($jawaban); ?></td>
                                 </tr>
                             <?php endforeach; ?>
-                        <?php else: ?>
-                            <tr>
-                                <td>Tidak ada jawaban</td>
-                            </tr>
                         <?php endif; ?>
                     </tbody>
                 </table>
             <?php endforeach; ?>
-        <?php else: ?>
-            <p>Tidak ada data untuk pertanyaan tipe textbox.</p>
         <?php endif; ?>
     </div>
 
     <script>
-        const radioAndDropdownData = <?php echo json_encode($radioAndDropdownData); ?>;
+        const visualData = <?php echo json_encode($visualData); ?>;
 
-        Object.keys(radioAndDropdownData).forEach(id => {
-            const row = radioAndDropdownData[id];
-            const ctx = document.getElementById(`chart-${id}`).getContext('2d');
+        Object.keys(visualData).forEach(id => {
+            const row = visualData[id];
+            const ctx = document.getElementById(chart-${id}).getContext('2d');
             new Chart(ctx, {
                 type: 'bar',
                 data: {
@@ -180,7 +146,7 @@ $textData = array_filter($data, function ($row) {
     <footer id="footer">
         <div class="footer">
             <h2>Be the Next Generation</h2>
-            <p>Copyright &copy; 2024 AGS. All rights reserved.</p>
+            <p>&copy; 2024 AGS. All rights reserved.</p>
         </div>
     </footer>
 </body>

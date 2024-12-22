@@ -18,12 +18,37 @@ $stmt->bind_result($nim, $nama);
 $stmt->fetch();
 $stmt->close();
 
+// Check if the student has already filled out the questionnaire
+$sql_check = "SELECT is_filled FROM kuisioner WHERE nim_mahasiswa = ?";
+$stmt_check = $conn->prepare($sql_check);
+$stmt_check->bind_param("s", $nim);
+$stmt_check->execute();
+$stmt_check->bind_result($is_filled);
+$stmt_check->fetch();
+$stmt_check->close();
+
+if ($is_filled) {
+    // If the student has already filled out the questionnaire
+    echo "<!DOCTYPE html>
+    <html>
+    <head>
+        <title>Kuisioner Sudah Diisi</title>
+    </head>
+    <body>
+        <h1>Anda hanya dapat mengisi kuisioner satu kali.</h1>
+        <p>Terima kasih atas partisipasi Anda.</p>
+        <a href='../login-mahasiswa/home.php'>Kembali ke Home</a>
+    </body>
+    </html>";
+    exit();
+}
+
 // Get lecturer data for dropdown
 $sql_dosen = "SELECT nip, nama FROM dosen";
 $result_dosen = $conn->query($sql_dosen);
 
 // Get questions for the form
-$sql_pertanyaan = "SELECT id, nama_pertanyaan, tipe_pertanyaan FROM pertanyaan";
+$sql_pertanyaan = "SELECT id, nama_pertanyaan, tipe_pertanyaan FROM pertanyaan WHERE is_published = 1";
 $result_pertanyaan = $conn->query($sql_pertanyaan);
 ?>
 
@@ -55,6 +80,7 @@ $result_pertanyaan = $conn->query($sql_pertanyaan);
             <p><strong>Nama:</strong> <?php echo htmlspecialchars($nama); ?></p>
             <input type="hidden" name="nim_mahasiswa" value="<?php echo htmlspecialchars($nim); ?>">
 
+            <!-- Dropdown for lecturers -->
             <div class="question-box">
                 <h2>Pilih Dosen</h2>
                 <label for="nip_dosen">Pilih dosen yang ingin dinilai:</label>
@@ -72,6 +98,7 @@ $result_pertanyaan = $conn->query($sql_pertanyaan);
                 </select>
             </div>
 
+            <!-- Questions -->
             <?php
             if ($result_pertanyaan->num_rows > 0) {
                 while ($row = $result_pertanyaan->fetch_assoc()) {
@@ -80,7 +107,6 @@ $result_pertanyaan = $conn->query($sql_pertanyaan);
                     if ($row['tipe_pertanyaan'] == 'dropdown') {
                         echo "<select name='jawaban[" . $row['id'] . "]' required>";
                         echo "<option value=''>-- Pilih --</option>";
-                        // Fetch choices
                         $sql_choices = "SELECT id, pilihan FROM pilihan WHERE pertanyaan_id = ?";
                         $stmt_choices = $conn->prepare($sql_choices);
                         $stmt_choices->bind_param("i", $row['id']);
@@ -93,7 +119,6 @@ $result_pertanyaan = $conn->query($sql_pertanyaan);
                     } elseif ($row['tipe_pertanyaan'] == 'textbox') {
                         echo "<textarea name='jawaban[" . $row['id'] . "]' required></textarea>";
                     } else {
-                        // For 'radio' or 'checkbox'
                         $sql_choices = "SELECT id, pilihan FROM pilihan WHERE pertanyaan_id = ?";
                         $stmt_choices = $conn->prepare($sql_choices);
                         $stmt_choices->bind_param("i", $row['id']);
@@ -105,14 +130,15 @@ $result_pertanyaan = $conn->query($sql_pertanyaan);
                     }
                     echo "</div>";
                 }
-            echo "Tidak ada data pertanyaan.";
+            } else {
+                echo "<p>Tidak ada pertanyaan yang tersedia.</p>";
             }
-            
             ?>
 
+            <!-- Additional input for suggestions -->
             <h2>Saran atau Masukan</h2>
             <div class="question-box">
-                <label>10. Adakah masukan/saran terkait kinerja dosen untuk tahun ajaran berikutnya?</label>
+                <label>Adakah masukan/saran terkait kinerja dosen?</label>
                 <textarea name="saran" rows="4" placeholder="Masukkan saran Anda di sini..." required></textarea>
             </div>
 

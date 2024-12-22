@@ -46,3 +46,5 @@ DROP FOREIGN KEY jawaban_ibfk_2;
 ALTER TABLE jawaban
 ADD CONSTRAINT jawaban_ibfk_2 FOREIGN KEY (pertanyaan_id) REFERENCES pertanyaan(id) ON DELETE CASCADE;
 
+ALTER TABLE kuisioner
+ADD COLUMN is_filled TINYINT(1) DEFAULT 0; -- 0 = belum mengisi, 1 = sudah mengisi
