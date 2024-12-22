@@ -71,6 +71,7 @@ $textData = array_filter($data, function ($row) {
 
     <div class="container">
         <h1>Hasil Kuisioner</h1>
+        <a href="../kuisioner/view-mhs">Mahasiswa yang Mengisi</a>
 
         <!-- Grafik untuk Radio, Dropdown, dan Checkbox -->
         <div id="charts-container" class="chart-container">

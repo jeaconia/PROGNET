@@ -4,7 +4,7 @@ include '../config.php'; // Koneksi database
 
 // Pastikan mahasiswa sudah login
 if (!isset($_SESSION['user_id'])) {
-    header("Location: login.php");
+    header("Location: ../login-mahasiswa/login.php");
     exit();
 }
 

@@ -2,6 +2,11 @@
 session_start();
 include '../config.php'; // Koneksi database
 
+if (!isset($_SESSION['user_id'])) {
+    header("Location: ../login-dosen/login.php");
+    exit();
+}
+
 // Ambil daftar mahasiswa yang sudah mengisi kuisioner
 $sql = "SELECT k.nim_mahasiswa, m.nama AS nama_mahasiswa, k.nip_dosen, d.nama AS nama_dosen, k.created_at 
         FROM kuisioner k
