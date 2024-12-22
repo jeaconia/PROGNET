@@ -18,19 +18,28 @@ $stmt->bind_result($nim, $nama);
 $stmt->fetch();
 $stmt->close();
 
-// Ambil data dosen untuk dropdown
-$sql_dosen = "SELECT nip, nama FROM dosen";
-$result_dosen = $conn->query($sql_dosen);
+// Ambil daftar dosen yang belum diisi kuisionernya oleh mahasiswa
+$sql_dosen = "SELECT d.nip, d.nama 
+              FROM dosen d
+              WHERE d.nip NOT IN (
+                  SELECT k.nip_dosen
+                  FROM kuisioner k
+                  WHERE k.nim_mahasiswa = ?
+              )";
+$stmt_dosen = $conn->prepare($sql_dosen);
+$stmt_dosen->bind_param("s", $nim);
+$stmt_dosen->execute();
+$result_dosen = $stmt_dosen->get_result();
 
 // Ambil data pertanyaan yang dipublikasikan
 $sql_pertanyaan = "SELECT id, nama_pertanyaan, tipe_pertanyaan FROM pertanyaan WHERE is_published = 1";
 $result_pertanyaan = $conn->query($sql_pertanyaan);
 
-// Jika form disubmit, periksa apakah mahasiswa sudah mengisi untuk dosen tertentu
+// Jika form disubmit, validasi apakah mahasiswa sudah mengisi kuisioner untuk dosen tertentu
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nip_dosen = $_POST['nip_dosen'];
 
-    // Cek apakah mahasiswa sudah mengisi kuisioner untuk dosen yang dipilih
+    // Cek apakah mahasiswa sudah mengisi kuisioner untuk dosen ini
     $sql_check = "SELECT COUNT(*) FROM kuisioner WHERE nim_mahasiswa = ? AND nip_dosen = ?";
     $stmt_check = $conn->prepare($sql_check);
     $stmt_check->bind_param("ss", $nim, $nip_dosen);
@@ -72,9 +81,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <li><a href="../login-mahasiswa/home.php">Home</a></li>
             </ul>
         </div>
-        <div class="navbar-logo">
-            <img src="../img/logo-teknologi-informasi-universitas-udayana-ti-unud-jhonarendra.png" alt="Logo" class="logo">
-        </div>
     </nav>
     <div class="container">
         <h1>Form Penilaian Kinerja Dosen</h1>
@@ -95,7 +101,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             echo "<option value='" . htmlspecialchars($row['nip']) . "'>" . htmlspecialchars($row['nama']) . "</option>";
                         }
                     } else {
-                        echo "<option value=''>Tidak ada dosen tersedia</option>";
+                        echo "<option value=''>Semua dosen sudah dinilai</option>";
                     }
                     ?>
                 </select>

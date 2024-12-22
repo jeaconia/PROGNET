@@ -48,3 +48,6 @@ ADD CONSTRAINT jawaban_ibfk_2 FOREIGN KEY (pertanyaan_id) REFERENCES pertanyaan(
 
 ALTER TABLE kuisioner
 ADD COLUMN is_filled TINYINT(1) DEFAULT 0; -- 0 = belum mengisi, 1 = sudah mengisi
+
+ALTER TABLE jawaban
+ADD COLUMN nip_dosen VARCHAR(18) NOT NULL AFTER pertanyaan_id;

@@ -3,9 +3,10 @@ session_start();
 include '../config.php'; // Koneksi database
 
 // Ambil daftar mahasiswa yang sudah mengisi kuisioner
-$sql = "SELECT k.nim_mahasiswa, m.nama, k.created_at 
+$sql = "SELECT k.nim_mahasiswa, m.nama AS nama_mahasiswa, k.nip_dosen, d.nama AS nama_dosen, k.created_at 
         FROM kuisioner k
         INNER JOIN mahasiswa m ON k.nim_mahasiswa = m.nim
+        INNER JOIN dosen d ON k.nip_dosen = d.nip
         WHERE k.is_filled = 1";
 $result = $conn->query($sql);
 
@@ -30,6 +31,7 @@ if (!$result) {
                 <tr>
                     <th>NIM</th>
                     <th>Nama Mahasiswa</th>
+                    <th>Dosen</th>
                     <th>Waktu Pengisian</th>
                 </tr>
             </thead>
@@ -38,13 +40,14 @@ if (!$result) {
                     <?php while ($row = $result->fetch_assoc()): ?>
                         <tr>
                             <td><?php echo htmlspecialchars($row['nim_mahasiswa']); ?></td>
-                            <td><?php echo htmlspecialchars($row['nama']); ?></td>
+                            <td><?php echo htmlspecialchars($row['nama_mahasiswa']); ?></td>
+                            <td><?php echo htmlspecialchars($row['nama_dosen']); ?></td>
                             <td><?php echo htmlspecialchars($row['created_at']); ?></td>
                         </tr>
                     <?php endwhile; ?>
                 <?php else: ?>
                     <tr>
-                        <td colspan="3" style="text-align:center;">Belum ada mahasiswa yang mengisi kuisioner.</td>
+                        <td colspan="4" style="text-align:center;">Belum ada mahasiswa yang mengisi kuisioner.</td>
                     </tr>
                 <?php endif; ?>
             </tbody>
