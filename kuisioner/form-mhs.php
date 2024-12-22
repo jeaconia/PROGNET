@@ -18,34 +18,6 @@ $stmt->bind_result($nim, $nama);
 $stmt->fetch();
 $stmt->close();
 
-// Periksa apakah mahasiswa sudah mengisi kuisioner
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    // Validasi apakah kuisioner sudah diisi untuk dosen tertentu
-    $sql_check = "SELECT COUNT(*) FROM kuisioner WHERE nim_mahasiswa = ?";
-    $stmt_check = $conn->prepare($sql_check);
-    $stmt_check->bind_param("s", $nim);
-    $stmt_check->execute();
-    $stmt_check->bind_result($is_filled_count);
-    $stmt_check->fetch();
-    $stmt_check->close();
-
-    if ($is_filled_count > 0) {
-        // Jika mahasiswa sudah mengisi kuisioner
-        echo "<!DOCTYPE html>
-        <html>
-        <head>
-            <title>Kuisioner Sudah Diisi</title>
-        </head>
-        <body>
-            <h1>Anda hanya dapat mengisi kuisioner satu kali.</h1>
-            <p>Terima kasih atas partisipasi Anda.</p>
-            <a href='../login-mahasiswa/home.php'>Kembali ke Home</a>
-        </body>
-        </html>";
-        exit();
-    }
-}
-
 // Ambil data dosen untuk dropdown
 $sql_dosen = "SELECT nip, nama FROM dosen";
 $result_dosen = $conn->query($sql_dosen);
@@ -53,6 +25,36 @@ $result_dosen = $conn->query($sql_dosen);
 // Ambil data pertanyaan yang dipublikasikan
 $sql_pertanyaan = "SELECT id, nama_pertanyaan, tipe_pertanyaan FROM pertanyaan WHERE is_published = 1";
 $result_pertanyaan = $conn->query($sql_pertanyaan);
+
+// Jika form disubmit, periksa apakah mahasiswa sudah mengisi untuk dosen tertentu
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $nip_dosen = $_POST['nip_dosen'];
+
+    // Cek apakah mahasiswa sudah mengisi kuisioner untuk dosen yang dipilih
+    $sql_check = "SELECT COUNT(*) FROM kuisioner WHERE nim_mahasiswa = ? AND nip_dosen = ?";
+    $stmt_check = $conn->prepare($sql_check);
+    $stmt_check->bind_param("ss", $nim, $nip_dosen);
+    $stmt_check->execute();
+    $stmt_check->bind_result($is_filled_count);
+    $stmt_check->fetch();
+    $stmt_check->close();
+
+    if ($is_filled_count > 0) {
+        // Jika mahasiswa sudah mengisi kuisioner untuk dosen ini
+        echo "<!DOCTYPE html>
+        <html>
+        <head>
+            <title>Kuisioner Sudah Diisi</title>
+        </head>
+        <body>
+            <h1>Anda hanya dapat mengisi kuisioner satu kali untuk dosen ini.</h1>
+            <p>Terima kasih atas partisipasi Anda.</p>
+            <a href='../login-mahasiswa/home.php'>Kembali ke Home</a>
+        </body>
+        </html>";
+        exit();
+    }
+}
 ?>
 
 <!DOCTYPE html>
