@@ -45,7 +45,7 @@ $result = $conn->query($sql);
         <div class="navbar-container">
             <ul class="navbar-links">
                 <li><a href="../login-admin/home.php">Home</a></li>
-                <li><a href="logout.php">Logout</a></li>
+                <li><a href="../login-admin/logout.php">Logout</a></li>
             </ul>
         </div>
         <div class="navbar-logo">
