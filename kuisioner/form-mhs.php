@@ -26,19 +26,20 @@ $result_dosen = $conn->query($sql_dosen);
 $sql_pertanyaan = "SELECT id, nama_pertanyaan, tipe_pertanyaan FROM pertanyaan WHERE is_published = 1";
 $result_pertanyaan = $conn->query($sql_pertanyaan);
 
-// Periksa apakah mahasiswa sudah mengisi kuisioner untuk dosen tertentu
+// Jika form disubmit
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nip_dosen = $_POST['nip_dosen'];
 
-    $sql_check = "SELECT is_filled FROM kuisioner WHERE nim_mahasiswa = ? AND nip_dosen = ?";
+    // Periksa apakah mahasiswa sudah mengisi kuisioner untuk dosen ini
+    $sql_check = "SELECT COUNT(*) FROM kuisioner WHERE nim_mahasiswa = ? AND nip_dosen = ?";
     $stmt_check = $conn->prepare($sql_check);
     $stmt_check->bind_param("ss", $nim, $nip_dosen);
     $stmt_check->execute();
-    $stmt_check->bind_result($is_filled);
+    $stmt_check->bind_result($is_filled_count);
     $stmt_check->fetch();
     $stmt_check->close();
 
-    if ($is_filled) {
+    if ($is_filled_count > 0) {
         // Jika mahasiswa sudah mengisi kuisioner untuk dosen ini
         echo "<!DOCTYPE html>
         <html>
@@ -54,12 +55,32 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit();
     }
 
-    // Simpan data kuisioner jika belum diisi
+    // Simpan data kuisioner
     $saran = $_POST['saran'];
-    $sql_insert = "INSERT INTO kuisioner (nim_mahasiswa, nip_dosen, saran, is_filled) VALUES (?, ?, ?, 1)";
-    $stmt_insert = $conn->prepare($sql_insert);
+    $sql_insert_kuisioner = "INSERT INTO kuisioner (nim_mahasiswa, nip_dosen, saran, is_filled) VALUES (?, ?, ?, 1)";
+    $stmt_insert = $conn->prepare($sql_insert_kuisioner);
     $stmt_insert->bind_param("sss", $nim, $nip_dosen, $saran);
     $stmt_insert->execute();
+    $kuisioner_id = $stmt_insert->insert_id;
+
+    // Simpan jawaban
+    foreach ($_POST['jawaban'] as $pertanyaan_id => $jawaban) {
+        if (is_array($jawaban)) {
+            // Untuk checkbox (banyak pilihan)
+            foreach ($jawaban as $pilihan_id) {
+                $sql_insert_jawaban = "INSERT INTO jawaban (kuisioner_id, pertanyaan_id, pilihan_id) VALUES (?, ?, ?)";
+                $stmt_jawaban = $conn->prepare($sql_insert_jawaban);
+                $stmt_jawaban->bind_param("iii", $kuisioner_id, $pertanyaan_id, $pilihan_id);
+                $stmt_jawaban->execute();
+            }
+        } else {
+            // Untuk dropdown, radio, atau textbox
+            $sql_insert_jawaban = "INSERT INTO jawaban (kuisioner_id, pertanyaan_id, pilihan_id, jawaban_teks) VALUES (?, ?, ?, ?)";
+            $stmt_jawaban = $conn->prepare($sql_insert_jawaban);
+            $stmt_jawaban->bind_param("iiis", $kuisioner_id, $pertanyaan_id, $jawaban, null);
+            $stmt_jawaban->execute();
+        }
+    }
 
     echo "<!DOCTYPE html>
     <html>
@@ -124,12 +145,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 while ($row = $result_pertanyaan->fetch_assoc()) {
                     echo "<div class='question-box'>";
                     echo "<label>" . htmlspecialchars($row['nama_pertanyaan']) . "</label>";
-                    if ($row['tipe_pertanyaan'] == 'textbox') {
-                        echo "<textarea name='jawaban[" . $row['id'] . "]' required></textarea>";
-                    } elseif ($row['tipe_pertanyaan'] == 'dropdown') {
+                    if ($row['tipe_pertanyaan'] == 'dropdown') {
                         echo "<select name='jawaban[" . $row['id'] . "]' required>";
                         echo "<option value=''>-- Pilih --</option>";
-                        // Fetch dropdown choices
                         $sql_choices = "SELECT id, pilihan FROM pilihan WHERE pertanyaan_id = ?";
                         $stmt_choices = $conn->prepare($sql_choices);
                         $stmt_choices->bind_param("i", $row['id']);
@@ -139,6 +157,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             echo "<option value='" . htmlspecialchars($choice['id']) . "'>" . htmlspecialchars($choice['pilihan']) . "</option>";
                         }
                         echo "</select>";
+                    } elseif ($row['tipe_pertanyaan'] == 'textbox') {
+                        echo "<textarea name='jawaban[" . $row['id'] . "]' required></textarea>";
+                    } else {
+                        $sql_choices = "SELECT id, pilihan FROM pilihan WHERE pertanyaan_id = ?";
+                        $stmt_choices = $conn->prepare($sql_choices);
+                        $stmt_choices->bind_param("i", $row['id']);
+                        $stmt_choices->execute();
+                        $result_choices = $stmt_choices->get_result();
+                        while ($choice = $result_choices->fetch_assoc()) {
+                            echo "<label><input type='" . ($row['tipe_pertanyaan'] == 'radio' ? 'radio' : 'checkbox') . "' name='jawaban[" . $row['id'] . "][]' value='" . htmlspecialchars($choice['id']) . "'> " . htmlspecialchars($choice['pilihan']) . "</label>";
+                        }
                     }
                     echo "</div>";
                 }
@@ -146,6 +175,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 echo "<p>Tidak ada pertanyaan yang tersedia.</p>";
             }
             ?>
+            <div class="question-box">
+                <label for="saran">Masukan atau Saran:</label>
+                <textarea name="saran" id="saran" rows="4" required></textarea>
+            </div>
             <button type="submit" class="button">Kirim</button>
         </form>
     </div>
