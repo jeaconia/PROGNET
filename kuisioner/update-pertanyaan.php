@@ -23,7 +23,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->bind_param("ssii", $nama_pertanyaan, $tipe_pertanyaan, $is_published, $question_id);
 
     if ($stmt->execute()) {
-        $message = "Pertanyaan berhasil diperbarui! <br> <a href='kelola-pertanyaan.php'>Kelola Pertanyaan</a>";
+        $message = "Pertanyaan berhasil diperbarui! <br> <a href='view-pertanyaan.php'>Kelola Pertanyaan</a>";
     } else {
         $message = "Error: " . $stmt->error;
     }
