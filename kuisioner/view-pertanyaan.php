@@ -27,9 +27,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['publish_id'])) {
     exit();
 }
 
-// Ambil data pertanyaan
-$sql = "SELECT id, nama_pertanyaan, tipe_pertanyaan, is_published FROM pertanyaan";
+// Ambil data pertanyaan beserta pilihan jawabannya
+$sql = "SELECT p.id, p.nama_pertanyaan, p.tipe_pertanyaan, p.is_published, pl.pilihan
+        FROM pertanyaan p
+        LEFT JOIN pilihan pl ON p.id = pl.pertanyaan_id
+        ORDER BY p.id, pl.id";
 $result = $conn->query($sql);
+
+$data_pertanyaan = [];
+if ($result && $result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        $data_pertanyaan[$row['id']]['pertanyaan'] = [
+            'nama_pertanyaan' => $row['nama_pertanyaan'],
+            'tipe_pertanyaan' => $row['tipe_pertanyaan'],
+            'is_published' => $row['is_published']
+        ];
+        if ($row['pilihan'] !== null) {
+            $data_pertanyaan[$row['id']]['pilihan'][] = $row['pilihan'];
+        }
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -66,36 +83,46 @@ $result = $conn->query($sql);
                     <th>Nama Pertanyaan</th>
                     <th>Tipe Pertanyaan</th>
                     <th>Status</th>
+                    <th>Pilihan Jawaban</th>
                     <th>Aksi</th>
                 </tr>
             </thead>
             <tbody>
-                <?php if ($result && $result->num_rows > 0): ?>
-                    <?php while ($row = $result->fetch_assoc()): ?>
+                <?php if (!empty($data_pertanyaan)): ?>
+                    <?php foreach ($data_pertanyaan as $id => $details): ?>
                     <tr>
-                        <td><?php echo htmlspecialchars($row['nama_pertanyaan']); ?></td>
-                        <td><?php echo htmlspecialchars($row['tipe_pertanyaan']); ?></td>
+                        <td><?php echo htmlspecialchars($details['pertanyaan']['nama_pertanyaan']); ?></td>
+                        <td><?php echo htmlspecialchars($details['pertanyaan']['tipe_pertanyaan']); ?></td>
+                        <td><?php echo $details['pertanyaan']['is_published'] ? 'Published' : 'Unpublished'; ?></td>
                         <td>
-                            <?php echo $row['is_published'] ? 'Published' : 'Unpublished'; ?>
+                            <ul>
+                                <?php if (!empty($details['pilihan'])): ?>
+                                    <?php foreach ($details['pilihan'] as $pilihan): ?>
+                                    <li><?php echo htmlspecialchars($pilihan); ?></li>
+                                    <?php endforeach; ?>
+                                <?php else: ?>
+                                    <li>Tidak ada jawaban tersedia.</li>
+                                <?php endif; ?>
+                            </ul>
                         </td>
                         <td>
                             <div class="action-buttons">
-                                <a href="update-pertanyaan.php?id=<?php echo $row['id']; ?>" class="btn edit">Edit</a>
-                                <a href="delete-pertanyaan.php?id=<?= $row['id']; ?>" onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?');">Hapus</a>
+                                <a href="update-pertanyaan.php?id=<?php echo $id; ?>" class="btn edit">Edit</a>
+                                <a href="delete-pertanyaan.php?id=<?php echo $id; ?>" onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?');" class="btn delete">Hapus</a>
                                 <form method="post" style="display:inline;">
-                                    <input type="hidden" name="publish_id" value="<?php echo $row['id']; ?>">
-                                    <input type="hidden" name="current_status" value="<?php echo $row['is_published']; ?>">
+                                    <input type="hidden" name="publish_id" value="<?php echo $id; ?>">
+                                    <input type="hidden" name="current_status" value="<?php echo $details['pertanyaan']['is_published']; ?>">
                                     <button type="submit" class="btn publish">
-                                        <?php echo $row['is_published'] ? 'Unpublish' : 'Publish'; ?>
+                                        <?php echo $details['pertanyaan']['is_published'] ? 'Unpublish' : 'Publish'; ?>
                                     </button>
                                 </form>
                             </div>
                         </td>
                     </tr>
-                    <?php endwhile; ?>
+                    <?php endforeach; ?>
                 <?php else: ?>
                     <tr>
-                        <td colspan="4" style="text-align: center;">Tidak ada data pertanyaan tersedia.</td>
+                        <td colspan="5" style="text-align: center;">Tidak ada data pertanyaan tersedia.</td>
                     </tr>
                 <?php endif; ?>
             </tbody>
@@ -105,7 +132,7 @@ $result = $conn->query($sql);
     <footer>
         <div class="footer">
             <h2>Be the Next Generation</h2>
-            <p>Copyright © 2024 AGS. All rights reserved.</p>
+            <p>Copyright &copy; 2024 AGS. All rights reserved.</p>
         </div>
     </footer>
 </body>
