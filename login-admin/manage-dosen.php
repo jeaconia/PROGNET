@@ -63,7 +63,7 @@ $result = $conn->query($sql);
                     <td><?php echo $row['alamat']; ?></td>
                     <td>
                         <a href="update-dosen.php?id=<?php echo $row['id']; ?>">Edit</a>
-                        <a href="delete-dosen.php?id=<?php echo $row['id']; ?>">Hapus</a>
+                        <a href="delete-dosen.php?id=<?= $row['id']; ?>" onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?');">Hapus</a>
                     </td>
                 </tr>
                 <?php endwhile; ?>

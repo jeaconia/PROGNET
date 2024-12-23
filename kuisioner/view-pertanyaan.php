@@ -81,7 +81,7 @@ $result = $conn->query($sql);
                         <td>
                             <div class="action-buttons">
                                 <a href="update-pertanyaan.php?id=<?php echo $row['id']; ?>" class="btn edit">Edit</a>
-                                <a href="delete-pertanyaan.php?id=<?php echo $row['id']; ?>" class="btn delete">Hapus</a>
+                                <a href="delete-pertanyaan.php?id=<?= $row['id']; ?>" onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?');">Hapus</a>
                                 <form method="post" style="display:inline;">
                                     <input type="hidden" name="publish_id" value="<?php echo $row['id']; ?>">
                                     <input type="hidden" name="current_status" value="<?php echo $row['is_published']; ?>">
